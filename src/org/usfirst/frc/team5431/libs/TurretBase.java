@@ -28,12 +28,11 @@ public class TurretBase {
 		
 		this.Left.enable();
 		this.Right.enable();
-		
-		this.Left.setInverted(true);
-		this.Right.setInverted(true);
+
 		
 		this.Left.clearStickyFaults();
 		this.Right.clearStickyFaults();
+
 	}
 	
 		/**
@@ -42,8 +41,8 @@ public class TurretBase {
 	 **/
 	public void setShoot(double speed)
 	{
-		this.Left.set(-speed);
-		this.Right.set(-speed);
+		this.Left.set(speed);
+		this.Right.set(speed);
 	}
 	
 	/**
