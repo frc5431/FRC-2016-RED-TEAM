@@ -46,7 +46,7 @@ public class Robot extends IterativeRobot {
     }
 
     /**
-     * This function is called periodically during autonomous
+     * This function is called periodically during autonomous. Effect changes based on the value of {@link #autoSelected}.
      */
     public void autonomousPeriodic() {
     	switch(autoSelected) {
