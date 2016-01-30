@@ -5,20 +5,22 @@ import edu.wpi.first.wpilibj.RobotDrive;
 
 public class DriveBase {
 	
-	private CANTalon frontRight;
-	private CANTalon rearLeft;
+	private CANTalon frontLeft, rearLeft, frontRight, rearRight;
+	
 	private RobotDrive drive;
 	
 	public DriveBase()
 	{
-		//this.talon = new CANTalon(0);
-		//this.drive = new RobotDrive();
+		this.frontLeft = new CANTalon(2);
+		this.rearLeft = new CANTalon(3);
+		this.frontRight = new CANTalon(4);
+		this.rearRight = new CANTalon(5);
+		this.drive = new RobotDrive(this.frontLeft, this.rearLeft, this.frontRight, this.rearRight);
 	}
 	
-	public void forward()
+	public void forward(double left, double right)
 	{
-		//this.talon.set(1);
-		//drive.tankDrive(leftValue, rightValue);
+		drive.tankDrive(left, right);
 	}
 	
 }
