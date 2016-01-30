@@ -1,10 +1,11 @@
 
 package org.usfirst.frc.team5431.robot;
 
+import org.usfirst.frc.team5431.libs.Intake;
+import org.usfirst.frc.team5431.libs.TurretBase;
+import org.usfirst.frc.team5431.map.InputMap;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -18,8 +19,16 @@ public class Robot extends IterativeRobot {
 		 Default,Custom
 	};
     AutoTask currentAuto;
+    TurretBase turret;
+    Intake intake;
+    InputMap input = new InputMap();
     //SendableChooser chooser;
     public void robotInit() {
+    	turret = new TurretBase();
+    	intake=new Intake();
+       	intake.setSpeed(1);
+        turret.setSpeed(0.7);
+    	
         // chooser = new SendableChooser();
         // chooser.addDefault("Default Auto", defaultAuto);
         // chooser.addObject("My Auto", customAuto);
@@ -51,7 +60,8 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        
+    	intake.checkInput(input);
+    	turret.checkInput(input);
     }
 
     public void testPeriodic() {}
