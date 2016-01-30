@@ -29,5 +29,11 @@ public class TurretBase {
 		this.Right.set(-speed);
 	}
 	
+	public void stopShoot()
+	{
+		this.Left.set(0);
+		this.Right.set(0);
+	}
+	
 }
 
