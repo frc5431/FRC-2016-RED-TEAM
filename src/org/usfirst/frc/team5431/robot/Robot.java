@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 	enum AutoTask{
-		Default,Custom
+		 Default,Custom
 	};
     AutoTask currentAuto;
     //SendableChooser chooser;
