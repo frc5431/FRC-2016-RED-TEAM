@@ -12,8 +12,6 @@ public class TurretBase {
 	{
 		this.Left = new CANTalon(MotorMap.LeftFly);
 		this.Right = new CANTalon(MotorMap.RightFly);
-		
-		//
 	}
 	
 	public void setShoot(double speed)
