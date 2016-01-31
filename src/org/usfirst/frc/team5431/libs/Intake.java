@@ -1,6 +1,6 @@
 package org.usfirst.frc.team5431.libs;
 
-import org.usfirst.frc.team5431.map.InputMap;
+import org.usfirst.frc.team5431.map.OI;
 import org.usfirst.frc.team5431.map.MotorMap;
 
 import edu.wpi.first.wpilibj.CANTalon;
@@ -10,14 +10,15 @@ import edu.wpi.first.wpilibj.CANTalon;
  * {@linkplain TurretBase shooter}.
  * <p>
  * Contains a toggle for the intake, which is specified by the
- * {@link #checkInput(InputMap)} method.
+ * {@link #checkInput(OI)} method.
  * 
  * @author AcademyHS Robotics
  *
  */
 public class Intake {
 	private final CANTalon top, bot;
-	private boolean running = false;
+	//true because it is inverted at the start. it won't actually start running
+	private boolean running = true;
 	private int pastbutton = 0;
 	private double speed = 0.7, motorspeed = 0;
 
@@ -81,12 +82,13 @@ public class Intake {
 	}
 
 	/**
-	 * Takes an {@link InputMap} and changes the speed values based on the
+	 * Takes an {@link OI} and changes the speed values based on the
 	 * input. Also intakes if it is toggled.
 	 * 
 	 * @param map
 	 */
-	public void checkInput(InputMap map) {
+	public void checkInput(OI map) {
+		//this is the code for the toggle.
 		if ((map.isIntaking() ? 0 : 1) > pastbutton) {
 			if (running) {
 				setMotorSpeed(0);
@@ -110,7 +112,7 @@ public class Intake {
 	}
 
 	/**
-	 * Sets the speed at which the {@link Robot robot} will intake when it is
+	 * Sets the speed at which the {@link Robot robot} will intake at when it is
 	 * toggled
 	 * 
 	 * @param Speed

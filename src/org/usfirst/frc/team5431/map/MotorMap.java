@@ -30,24 +30,24 @@ public final class MotorMap {
  **/
 	public static final int IntakeBot=7;
 	/**
- * Channel ID for the rear right wheel on the drive base, which is {@value #RearRight}
- * @see Robot
- **/
-	public static final int RearRight = 3;
-	/**
- * Channel ID for the rear left wheel on the drive base, which is {@value #RearLeft}
- * @see Robot
- **/
-	public static final int RearLeft = 2;
-	/**
  * Channel ID for the front right wheel on the drive base, which is {@value #FrontRight}
  * @see Robot
  **/
-	public static final int FrontRight = 8;
+	public static final int FrontRight = 3;
 	/**
  * Channel ID for the front left wheel on the drive base, which is {@value #FrontLeft}
  * @see Robot
  **/
-	public static final int FrontLeft =4;
+	public static final int FrontLeft = 2;
+	/**
+ * Channel ID for the rear right wheel on the drive base, which is {@value #RearRight}
+ * @see Robot
+ **/
+	public static final int RearRight = 8;
+	/**
+ * Channel ID for the rear left wheel on the drive base, which is {@value #RearLeft}
+ * @see Robot
+ **/
+	public static final int RearLeft =4;
 
 }

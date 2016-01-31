@@ -1,6 +1,6 @@
 package org.usfirst.frc.team5431.libs;
 
-import org.usfirst.frc.team5431.map.InputMap;
+import org.usfirst.frc.team5431.map.OI;
 import org.usfirst.frc.team5431.map.MotorMap;
 
 import edu.wpi.first.wpilibj.CANTalon;
@@ -23,7 +23,8 @@ import edu.wpi.first.wpilibj.CANTalon;
 public class TurretBase {
 
 	private CANTalon Left, Right;
-	private boolean running = false;
+	//true because it is inverted at the start. it won't actually start running
+	private boolean running = true;
 	private int pastbutton = 0;
 	private double speed = 0.7, motorspeed = 0;
 
@@ -88,12 +89,12 @@ public class TurretBase {
 	}
 
 	/**
-	 * Takes an {@link InputMap} and changes the speed values based on the
+	 * Takes an {@link OI} and changes the speed values based on the
 	 * input. Also shoots if it is toggled.
 	 * 
 	 * @param map
 	 */
-	public void checkInput(InputMap map) {
+	public void checkInput(OI map) {
 		if ((map.isShooting() ? 0 : 1) > pastbutton) {
 			if (running) {
 				setMotorSpeed(0);

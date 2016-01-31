@@ -5,23 +5,23 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * Class which contains all of the user input, including a {@linkplain Joystick
- * joystick}.
+ * joystick}. Classes will ask for it to get the input at that time. The methods update real-time.
  * 
  * @author AcademyHS Robotics
  * @see Robot
- */
-public final class InputMap {
+ */ 
+public final class OI {
 	/**
 	 * Defines that the joystick channel is {@value #JOYSTICK}.
 	 */
 	public static final int JOYSTICK = 0;
-	private final Joystick joy;
+	private  final Joystick joy;
 	private final JoystickButton intake, shoot;
 
 	/**
 	 * Default constructor which creates all of the input objects
 	 */
-	public InputMap() {
+	public OI() {
 		joy = new Joystick(JOYSTICK);
 		shoot = new JoystickButton(joy, 1);
 		intake = new JoystickButton(joy, 2);

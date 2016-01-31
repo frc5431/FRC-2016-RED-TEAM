@@ -4,7 +4,7 @@ package org.usfirst.frc.team5431.robot;
 import org.usfirst.frc.team5431.libs.DriveBase;
 import org.usfirst.frc.team5431.libs.Intake;
 import org.usfirst.frc.team5431.libs.TurretBase;
-import org.usfirst.frc.team5431.map.InputMap;
+import org.usfirst.frc.team5431.map.OI;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 
@@ -23,13 +23,14 @@ public class Robot extends IterativeRobot {
     private TurretBase turret;
     private  DriveBase drive;
     private Intake intake;
-    private InputMap input;
-    //SendableChooser chooser;
+    //oi m8
+    private OI oi;
+
     public void robotInit() {
     	turret = new TurretBase();
     	intake=new Intake();
     	drive = new DriveBase();
-    	input = new InputMap();
+    	oi = new OI();
        	intake.setSpeed(1);
         turret.setSpeed(0.7);
     	
@@ -64,9 +65,9 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	intake.checkInput(input);
-    	turret.checkInput(input);
-    	drive.checkInput(input);
+    	intake.checkInput(oi);
+    	turret.checkInput(oi);
+    	drive.checkInput(oi);
     }
 
     public void testPeriodic() {}
