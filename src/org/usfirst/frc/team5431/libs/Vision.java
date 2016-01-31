@@ -4,6 +4,7 @@
 package org.usfirst.frc.team5431.libs;
 
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * @author Team5431
@@ -21,7 +22,7 @@ class Maths {
 			fromNum = 0.2;
 	
 	//Distances and resolution values
-	private static final double 
+	public static final double 
 			screenHalf = 170,
 			minDistance = 90,
 			maxDistance = 144,
@@ -36,8 +37,6 @@ class Maths {
 	public double fromCenter(double half, double current) {
 		return current - half;
 	}
-	
-	public 
 	
 	public int chooseHole(double[] areas, double[] distances, double[] solidity, double[] fromCenter)
     {	
@@ -77,6 +76,11 @@ class Maths {
     	}
     }
 	
+	//See if number is within two other numbers
+    public boolean withIn(double num, double lower, double upper) {
+    	return ((num >= lower) && (num <= upper));
+    }
+	
 }
 
 public class Vision {
@@ -85,9 +89,64 @@ public class Vision {
 	private static Maths math;
 	private final double[] defaults = {0};
 	
+	//Holders for updates
+	public static double[]
+			areas = {0},
+			distances = {0},
+			fromCenters = {0},
+			holeSolids = {0};
+			
+	
 	public Vision() {
 		grip = NetworkTable.getTable("GRIP/vision");
 		math = new Maths();
+	}
+	
+	public void updateVals() {
+		areas = this.area();
+		distances = this.distance();
+		fromCenters = this.fromCenter(Maths.screenHalf);
+		holeSolids = this.solidity();
+	}
+	
+	public void updateSmartDash() {
+		this.updateSmartDash(0, 0);
+	}
+	
+	public double updateSmartDash(double readyVal, double offVal) {
+		
+		int toShoot = math.chooseHole(areas, distances, holeSolids, fromCenters); //Chooses an object to shoot at(Method below)
+		SmartDashboard.putNumber("Hole Num:", toShoot); //Display to dashboard what to shoot at
+		
+		if(toShoot != 666) {//Don't shoot at nothing (THE DEVIL)
+			double tempCenter = this.fromCenter(Maths.screenHalf)[toShoot]; //Temp center values
+			
+			//Display values to SmartDashboard!
+			SmartDashboard.putNumber("Hole area:", areas[toShoot]);
+			SmartDashboard.putNumber("Distance:", distances[toShoot]);
+			SmartDashboard.putNumber("From Center:", tempCenter);
+			SmartDashboard.putNumber("Solidity:", holeSolids[toShoot]);
+			
+			int forback = (math.withIn(distances[toShoot], Maths.minDistance, Maths.maxDistance)) ? 0 : 
+					(distances[toShoot] < Maths.minDistance) ? 1 : 2; //Get which direction to drive
+					
+			int lefight = (math.withIn(tempCenter, Maths.leftTrig, Maths.rightTrig)) ? 0 :
+					(tempCenter < Maths.leftTrig) ? 1 : 2; //Amount to turn the turrent
+			
+			if((forback == 0) && (lefight == 0)) {
+				SmartDashboard.putString("FIRE", "YES FIRE!");
+				SmartDashboard.putString("PULL", "YES FIRE!");	
+				return readyVal;
+			} else {
+				SmartDashboard.putString("PULL", ((forback == 0) ? "" : (forback == 1) ? "Drive Back!" : "Drive Forward!")); //Display to the dashboard
+				SmartDashboard.putString("FIRE", ((lefight == 0) ? "" : (lefight == 1) ? "Turn Left!" : "Turn Right!")); //Display to the dashboard
+				return ((readyVal+offVal)/2) - 0.05;
+			}
+		} else {
+			SmartDashboard.putString("FIRE", "HOLE NOT FOUND!");
+			return offVal;
+		}
+		
 	}
 	
 	public void stop() {
@@ -115,11 +174,6 @@ public class Vision {
 		}
 		return distances;
 	}
-	
-	//See if number is within two other numbers
-    public boolean withIn(double num, double lower, double upper) {
-    	return ((num >= lower) && (num <= upper));
-    }
 	
 	public double[] fromCenter(double HalfSize) {
 		final double objects[] = 

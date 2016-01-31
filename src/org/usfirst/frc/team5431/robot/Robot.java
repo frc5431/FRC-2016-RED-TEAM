@@ -4,6 +4,7 @@ package org.usfirst.frc.team5431.robot;
 import org.usfirst.frc.team5431.libs.DriveBase;
 import org.usfirst.frc.team5431.libs.Intake;
 import org.usfirst.frc.team5431.libs.TurretBase;
+import org.usfirst.frc.team5431.libs.Vision;
 import org.usfirst.frc.team5431.map.OI;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -25,16 +26,15 @@ public class Robot extends IterativeRobot {
     private DriveBase drive;
     private Intake intake;
     private OI oi;
+    private Vision vision;
 
     public void robotInit() {
     	
     	turret = new TurretBase();
-    	
     	intake=new Intake();
-    	
     	drive = new DriveBase();
-    	
     	oi = new OI(); //Joystick mapping
+    	vision = new Vision();
     	
        	intake.setSpeed(1);
         turret.setSpeed(0.7);
@@ -75,5 +75,11 @@ public class Robot extends IterativeRobot {
     	drive.checkInput(oi);
     }
 
+    private void updateVision()
+    {
+    	vision.updateVals();
+    	vision.updateSmartDash();
+    }
+    
     public void testPeriodic() {}
 }
