@@ -36,6 +36,11 @@ public class Intake {
 
 		this.top.clearStickyFaults();
 		this.bot.clearStickyFaults();
+		
+		this.top.setInverted(true);
+		
+		this.top.enableBrakeMode(true);
+		this.bot.enableBrakeMode(true);
 	}
 
 	/**
@@ -44,7 +49,7 @@ public class Intake {
 	 * @see #getSpeed(double)
 	 */
 	public void intake() {
-		this.top.set(-motorspeed);
+		this.top.set(motorspeed);
 		this.bot.set(motorspeed);
 	}
 

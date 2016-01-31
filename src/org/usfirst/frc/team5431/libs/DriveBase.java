@@ -15,25 +15,41 @@ public class DriveBase {
 	
 	public DriveBase()
 	{
+		this(false);
+	}
+	
+	public DriveBase(boolean brakeMode)
+	{
 		this.rearleft = new CANTalon(MotorMap.RearLeft);
 		this.frontleft = new CANTalon(MotorMap.FrontLeft);
 		this.rearright = new CANTalon(MotorMap.RearRight);
 		this.frontright = new CANTalon(MotorMap.FrontRight);
-		this.drive = new RobotDrive(this.rearleft, this.frontleft, this.rearright, this.frontright);
+		
+		this.rearleft.enable();
+		this.frontleft.enable();
+		this.rearright.enable();
+		this.frontright.enable();
+		
+		this.rearleft.clearStickyFaults();
+		this.frontleft.clearStickyFaults();
+		this.rearright.clearStickyFaults();
+		this.frontright.clearStickyFaults();
+		
+		this.rearleft.enableBrakeMode(brakeMode);
+		this.frontleft.enableBrakeMode(brakeMode);
+		this.frontright.enableBrakeMode(brakeMode);
+		this.rearright.enableBrakeMode(brakeMode);
+		
+		this.drive = new RobotDrive(this.frontleft, this.rearleft, this.frontright, this.rearright);
 	}
 	
 	private void drive(double left, double right)
 	{
-//		left1.set(left);
-//		left2.set(left);
-//		right1.set(right);
-//		right2.set(right);
 		drive.tankDrive(left, right);
-		//drive.tankDrive(left, right);
 	}
 	
 	public void checkInput(OI map){
-		drive(map.getYAxis(),map.getZRotateAxis());
+		this.drive(map.getDriveLeftYAxis(),map.getDriveRightYAxis());
 	}
 	
 }

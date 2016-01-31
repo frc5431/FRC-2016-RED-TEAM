@@ -9,28 +9,33 @@ import org.usfirst.frc.team5431.map.OI;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
+ * This is the code for red teams (There are two robots building and red is awesome)
+ * Look under the libs package to see where all the main classes are split up
+ * This Robot.java is just the main thread(s) that will be controlling those classes
+ * Have your looksez
  */
 public class Robot extends IterativeRobot {
+	
 	enum AutoTask{
 		 Default,Custom
 	};
+	
     AutoTask currentAuto;
     private TurretBase turret;
-    private  DriveBase drive;
+    private DriveBase drive;
     private Intake intake;
-    //oi m8
     private OI oi;
 
     public void robotInit() {
+    	
     	turret = new TurretBase();
+    	
     	intake=new Intake();
+    	
     	drive = new DriveBase();
-    	oi = new OI();
+    	
+    	oi = new OI(); //Joystick mapping
+    	
        	intake.setSpeed(1);
         turret.setSpeed(0.7);
     	

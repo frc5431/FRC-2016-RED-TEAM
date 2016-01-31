@@ -14,17 +14,27 @@ public final class OI {
 	/**
 	 * Defines that the joystick channel is {@value #JOYSTICK}.
 	 */
-	public static final int JOYSTICK = 0;
-	private  final Joystick joy;
+	public static final int 
+			JOYSTICK_DRIVE = 0, 
+			JOYSTICK_GUN = 0, 
+			driveLY = 1, 
+			driveRY = 4,
+			gunTrigger = 1, 
+			driveIntake = 1;
+	
+	private final Joystick drive, gun;
 	private final JoystickButton intake, shoot;
+	
 
 	/**
 	 * Default constructor which creates all of the input objects
 	 */
 	public OI() {
-		joy = new Joystick(JOYSTICK);
-		shoot = new JoystickButton(joy, 1);
-		intake = new JoystickButton(joy, 2);
+		drive = new Joystick(JOYSTICK_DRIVE);
+		gun = new Joystick(JOYSTICK_GUN);
+		
+		shoot = new JoystickButton(gun, gunTrigger);
+		intake = new JoystickButton(drive, driveIntake);
 	}
 
 	/**
@@ -32,8 +42,12 @@ public final class OI {
 	 * 
 	 * @return the connected joystick
 	 */
-	public Joystick getController() {
-		return joy;
+	public Joystick getDriveController() {
+		return drive;
+	}
+	
+	public Joystick getGunController() {
+		return gun;
 	}
 
 	/**
@@ -58,19 +72,20 @@ public final class OI {
 		return intake.get();
 	}
 
-	public double getXAxis() {
-		return joy.getRawAxis(0);
+	public double getDriveLeftYAxis() {
+		return drive.getRawAxis(driveLY);
 	}
 
-	public double getYAxis() {
-		return joy.getRawAxis(1);
+	public double getDriveRightYAxis() {
+		return drive.getRawAxis(driveRY);
 	}
 
+	/* Not needed now
 	public double getZAxis() {
 		return joy.getRawAxis(2);
 	}
 
 	public double getZRotateAxis() {
 		return joy.getRawAxis(3);
-	}
+	}*/
 }
