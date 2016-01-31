@@ -43,11 +43,11 @@ public final class MotorMap {
  * Channel ID for the front right wheel on the drive base, which is {@value #FrontRight}
  * @see Robot
  **/
-	public static final int FrontRight = 1;
+	public static final int FrontRight = 8;
 	/**
  * Channel ID for the front left wheel on the drive base, which is {@value #FrontLeft}
  * @see Robot
  **/
-	public static final int FrontLeft =0;
+	public static final int FrontLeft =4;
 
 }

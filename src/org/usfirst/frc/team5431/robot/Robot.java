@@ -1,6 +1,7 @@
 
 package org.usfirst.frc.team5431.robot;
 
+import org.usfirst.frc.team5431.libs.DriveBase;
 import org.usfirst.frc.team5431.libs.Intake;
 import org.usfirst.frc.team5431.libs.TurretBase;
 import org.usfirst.frc.team5431.map.InputMap;
@@ -19,13 +20,16 @@ public class Robot extends IterativeRobot {
 		 Default,Custom
 	};
     AutoTask currentAuto;
-    TurretBase turret;
-    Intake intake;
-    InputMap input = new InputMap();
+    private TurretBase turret;
+    private  DriveBase drive;
+    private Intake intake;
+    private InputMap input;
     //SendableChooser chooser;
     public void robotInit() {
     	turret = new TurretBase();
     	intake=new Intake();
+    	drive = new DriveBase();
+    	input = new InputMap();
        	intake.setSpeed(1);
         turret.setSpeed(0.7);
     	
@@ -62,6 +66,7 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	intake.checkInput(input);
     	turret.checkInput(input);
+    	drive.checkInput(input);
     }
 
     public void testPeriodic() {}

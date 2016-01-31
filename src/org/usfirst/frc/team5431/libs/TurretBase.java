@@ -50,8 +50,8 @@ public class TurretBase {
 	 * @see #getSpeed(double)
 	 */
 	public void shoot() {
-		this.Left.set(-motorspeed);
-		this.Right.set(motorspeed);
+		this.Left.set(motorspeed);
+		this.Right.set(-motorspeed);
 	}
 
 	/**
