@@ -113,7 +113,9 @@ public class Vision {
 		this.updateSmartDash(0, 0);
 	}
 	
-	public double updateSmartDash(double readyVal, double offVal) {
+	public double[] updateSmartDash(double readyVal, double offVal) {
+		
+		double[] toReturn = {0};
 		
 		int toShoot = math.chooseHole(areas, distances, holeSolids, fromCenters); //Chooses an object to shoot at(Method below)
 		SmartDashboard.putNumber("Hole Num:", toShoot); //Display to dashboard what to shoot at
@@ -136,16 +138,24 @@ public class Vision {
 			if((forback == 0) && (lefight == 0)) {
 				SmartDashboard.putString("FIRE", "YES FIRE!");
 				SmartDashboard.putString("PULL", "YES FIRE!");	
-				return readyVal;
+				toReturn[0] = readyVal;
+				toReturn[1] = 0;
+				toReturn[2] = 0;
 			} else {
 				SmartDashboard.putString("PULL", ((forback == 0) ? "" : (forback == 1) ? "Drive Back!" : "Drive Forward!")); //Display to the dashboard
 				SmartDashboard.putString("FIRE", ((lefight == 0) ? "" : (lefight == 1) ? "Turn Left!" : "Turn Right!")); //Display to the dashboard
-				return ((readyVal+offVal)/2) - 0.05;
+				toReturn[0] = ((readyVal+offVal)/2) - 0.05;
+				toReturn[1] = lefight;
+				toReturn[2] = forback;
 			}
 		} else {
 			SmartDashboard.putString("FIRE", "HOLE NOT FOUND!");
-			return offVal;
+			toReturn[0] = offVal;
+			toReturn[1] = 0;
+			toReturn[2] = 0;
 		}
+		
+		return toReturn;
 		
 	}
 	
