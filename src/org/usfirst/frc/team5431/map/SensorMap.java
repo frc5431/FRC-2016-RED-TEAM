@@ -1,7 +1,10 @@
 package org.usfirst.frc.team5431.map;
 
 public class SensorMap {
-
+	
+	/**
+	 * Constant which defines which ID on the RoboRIO belongs to the sensor.
+	 */
 	public static final int frontRightEncoder1 = 0,
 				frontRightEncoder2 = 1,
 				frontLeftEncoder1 = 2,
