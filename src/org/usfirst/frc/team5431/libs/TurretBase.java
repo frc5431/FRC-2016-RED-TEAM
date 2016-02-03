@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5431.libs;
 
 import org.usfirst.frc.team5431.map.OI;
+import org.usfirst.frc.team5431.robot.Robot;
 import org.usfirst.frc.team5431.map.MotorMap;
 
 import edu.wpi.first.wpilibj.CANTalon;

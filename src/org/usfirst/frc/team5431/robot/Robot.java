@@ -2,11 +2,14 @@
 package org.usfirst.frc.team5431.robot;
 
 import org.usfirst.frc.team5431.libs.DriveBase;
+import org.usfirst.frc.team5431.libs.EncoderBase;
 import org.usfirst.frc.team5431.libs.Intake;
 import org.usfirst.frc.team5431.libs.TurretBase;
 import org.usfirst.frc.team5431.libs.Vision;
 import org.usfirst.frc.team5431.map.OI;
+import org.usfirst.frc.team5431.map.SensorMap;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -29,6 +32,8 @@ public class Robot extends IterativeRobot {
     private Intake intake;
     private OI oi;
     private Vision vision;
+    public static DigitalInput boulderLimit;
+	private EncoderBase encoder;
     private boolean runOnce = false; //Don't mess with please
     
     public static volatile double[] autoAimVals = {0, 0, 0}; //Make sure the other thread can see the vals
@@ -43,7 +48,9 @@ public class Robot extends IterativeRobot {
     	intake=new Intake();
     	drive = new DriveBase();
     	oi = new OI(); //Joystick mapping
-    	
+		boulderLimit = new DigitalInput(SensorMap.intakeLimit);
+    	encoder = new EncoderBase();
+		
        	intake.setSpeed(1);
         turret.setSpeed(0.7);
     	
@@ -59,7 +66,9 @@ public class Robot extends IterativeRobot {
  		SmartDashboard.putString("Auto Selected: ", currentAuto.toString());
     }
     
-    public void autonMode() {
+    public void lowbarMode() {
+    	//Drive 15 feet
+    	this.auto_driveStraight(156, 0.5, 0.05); //Distance (in), speed (0-1), curve(0-0.1)
     	
     }
 
@@ -72,7 +81,7 @@ public class Robot extends IterativeRobot {
     	switch(currentAuto) {
     		case AutoShoot:
     			if(runOnce) {
-    				this.autonMode();
+    				this.lowbarMode();
     				runOnce = false;
     			}
     			break;
@@ -102,6 +111,24 @@ public class Robot extends IterativeRobot {
     
     public void disabledPeriodic() {
     	runOnce = true;
+    }
+    
+    private void auto_driveStraight(double distance, double speed, double curve) {
+    	encoder.resetDrive();
+    	
+    	double left = 0;
+    	double right = 0;
+    	
+    	while(((left = encoder.LeftDistance()) < distance) && ((right = encoder.RightDistance()) < distance)) {
+    		if(left < right) {
+    			drive.drive(speed+curve, speed-curve);
+    		} else if(right > left) {
+    			drive.drive(speed-curve, speed+curve);
+    		} else {
+    			drive.drive(speed, speed);
+    		}
+    	}
+    	drive.drive(0, 0);
     }
     
     public void testPeriodic() {}

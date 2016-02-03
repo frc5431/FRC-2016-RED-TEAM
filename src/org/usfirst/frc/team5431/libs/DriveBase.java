@@ -43,7 +43,7 @@ public class DriveBase {
 		this.drive = new RobotDrive(this.frontleft, this.rearleft, this.frontright, this.rearright);
 	}
 	
-	private void drive(double left, double right)
+	public void drive(double left, double right)
 	{
 		drive.tankDrive(left, right);
 	}

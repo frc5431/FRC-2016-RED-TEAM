@@ -1,9 +1,11 @@
 package org.usfirst.frc.team5431.libs;
 
 import org.usfirst.frc.team5431.map.OI;
+import org.usfirst.frc.team5431.robot.Robot;
 import org.usfirst.frc.team5431.map.MotorMap;
 
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 /**
  * Intake class for team 5431's intake mechanism. Works hand in hand with the
@@ -19,6 +21,7 @@ public class Intake {
 	private final CANTalon top, bot;
 	//true because it is inverted at the start. it won't actually start running
 	private boolean running = true;
+	private static DigitalInput boulderLimit;
 	private int pastbutton = 0;
 	private double speed = 0.7, motorspeed = 0;
 
@@ -41,6 +44,8 @@ public class Intake {
 		
 		this.top.enableBrakeMode(true);
 		this.bot.enableBrakeMode(true);
+		
+		boulderLimit = Robot.boulderLimit;
 	}
 
 	/**
@@ -95,9 +100,20 @@ public class Intake {
 	public void checkInput(OI map) {
 		//this is the code for the toggle.
 		if ((map.isIntaking() ? 0 : 1) > pastbutton) {
+			if (running && !boulderLimit.get()) {
+				setMotorSpeed(0);
+			} else if(!boulderLimit.get()) {
+				setMotorSpeed(speed);
+			}
+			intake();
+		}
+		pastbutton = map.isIntaking() ? 0 : 1;
+		
+		//toggle gun
+		if ((map.isIntaking() ? 0 : 1) > pastbutton) {
 			if (running) {
 				setMotorSpeed(0);
-			} else {
+			} else if(!boulderLimit.get()) {
 				setMotorSpeed(speed);
 			}
 			intake();
