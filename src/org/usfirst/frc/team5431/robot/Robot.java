@@ -112,6 +112,7 @@ public class Robot extends IterativeRobot {
     	//intake.checkInput(oi);
     	//turret.checkInput(oi);
     	drive.checkInput(oi);
+    	pneumatic.checkInput(oi);
     }
     
     public void disabledPeriodic() {

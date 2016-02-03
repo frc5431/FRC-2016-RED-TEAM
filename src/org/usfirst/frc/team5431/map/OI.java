@@ -20,10 +20,12 @@ public final class OI {
 			driveLY = 1, 
 			driveRY = 4,
 			gunTrigger = 1, 
-			driveIntake = 1;
+			driveIntake = 1,
+			driveSolIn = 2,
+			driveSolOut = 3;
 	
 	private final Joystick drive, gun;
-	private final JoystickButton intake, shoot;
+	private final JoystickButton intake, shoot, solIn, solOut;
 	
 
 	/**
@@ -35,6 +37,9 @@ public final class OI {
 		
 		shoot = new JoystickButton(gun, gunTrigger);
 		intake = new JoystickButton(drive, driveIntake);
+		
+		solIn = new JoystickButton(drive, driveSolIn);
+		solOut = new JoystickButton(drive, driveSolOut);
 	}
 
 	/**
@@ -78,6 +83,14 @@ public final class OI {
 
 	public double getDriveRightYAxis() {
 		return drive.getRawAxis(driveRY);
+	}
+	
+	public boolean isSolOut() {
+		return solOut.get();
+	}
+	
+	public boolean isSolIn() {
+		return solIn.get();
 	}
 
 	/* Not needed now
