@@ -38,11 +38,20 @@ public class Robot extends IterativeRobot {
 	private EncoderBase encoder;
     private boolean runOnce = false; //Don't mess with please
     
+    /**
+     * Holder array whose value is changed by other threads. 
+     */
     public static volatile double[] autoAimVals = {0, 0, 0}; //Make sure the other thread can see the vals
+    /**
+     * Holder value whose value is changed by other threads. 
+     */
     public static volatile double 
     		onTarget = 0.7, //Value to shoot at target
     		offTarget = 0.2; //Value to idle flyWheels
 
+	/**
+	 * Method called once in a {@linkplain Robot robot's} lifetime.
+	 * */
     public void robotInit() {
     	runOnce = true;
     	
@@ -66,11 +75,17 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData("Auto choices", auton_select);
     }
     
+    /**
+     * Method called once at the start of autonomous mode.
+     * */
     public void autonomousInit() {
     	currentAuto = (AutoTask) auton_select.getSelected();
  		SmartDashboard.putString("Auto Selected: ", currentAuto.toString());
     }
     
+    /**
+     * Autonomously drives under the low bar.
+     * */
     public void lowbarMode() {
     	//Drive 15 feet
     	this.auto_driveStraight(156, 0.5, 0.05); //Distance (in), speed (0-1), curve(0-0.1)
@@ -97,10 +112,9 @@ public class Robot extends IterativeRobot {
     	}
     }
 
-    /*
-     * Run once blah... blah... blah... you get it
+    /**
+     * Runs once at the beginning of teleoperated control.
      */
-    
     public void teleopInit() {
     	runOnce = true;
     }
@@ -115,10 +129,17 @@ public class Robot extends IterativeRobot {
     	pneumatic.checkInput(oi);
     }
     
+    /**
+     * 
+     * Called when peridioc is disabled
+     * */
     public void disabledPeriodic() {
     	runOnce = true;
     }
     
+    /**
+     * Automagically drives straight
+     * */
     private void auto_driveStraight(double distance, double speed, double curve) {
     	encoder.resetDrive();
     	
@@ -137,20 +158,33 @@ public class Robot extends IterativeRobot {
     	drive.drive(0, 0);
     }
     
+    /**
+     * @deprecated unused
+     * */
+    @Deprecated
     public void testPeriodic() {}
 }
 
+/**
+ * Thread which handles vision and fills in some public holder values.
+ * */
 class VisionThread extends Thread {
 
 	private Vision vision;
 	private static double onTarget, offTarget;
 	
+	/**
+	 * Default constructor.
+	 * */
 	public VisionThread() {
 		vision = new Vision();
 		onTarget = Robot.onTarget;
 		offTarget = Robot.offTarget;
 	}
 	
+	/**
+	 * {@inherit-javadoc}
+	 * */
 	@Override
 	public void run() {
 		while(true)
