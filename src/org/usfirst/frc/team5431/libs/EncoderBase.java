@@ -38,11 +38,19 @@ public class EncoderBase {
 	}
 	
 	public double leftFlyRPM() {
-		return  (60/7 * this.FlyLeft.getPeriod());
+		return  (60/(7 * this.FlyLeft.getPeriod()));
 	}
 	
 	public double rightFlyRPM() {
-		return  (60/7 * this.FlyRight.getPeriod());
+		return  (60/(7 * this.FlyRight.getPeriod()));
+	}
+	
+	public double[] setSpeed(double speed) {
+		double[] temp = {speed, speed};
+		if(this.leftFlyRPM() < this.rightFlyRPM()) {
+			return temp;
+		}
+		return temp;
 	}
 	
 	public void resetDrive() {
