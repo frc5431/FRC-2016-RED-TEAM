@@ -165,6 +165,14 @@ public class Vision {
 		this.updateSmartDash(0, 0);
 	}
 
+	/**
+	 * Updates the {@linkplain SmartDashboard} with the new values.
+	 * 
+	 * @param readyVal Value to set if it is ready to shoot
+	 * @param offVal Value to set if it is off
+	 * @return An array of values, where each value says if it is ready to shoot. A 1 size array of 0 means it failed or not ready to shoot.
+	 * @see #updateVals()
+	 * */
 	public double[] updateSmartDash(double readyVal, double offVal) {
 		
 		double[] toReturn = {0};
