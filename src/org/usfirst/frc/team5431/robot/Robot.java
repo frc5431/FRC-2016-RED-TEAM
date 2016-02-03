@@ -4,6 +4,7 @@ package org.usfirst.frc.team5431.robot;
 import org.usfirst.frc.team5431.libs.DriveBase;
 import org.usfirst.frc.team5431.libs.EncoderBase;
 import org.usfirst.frc.team5431.libs.Intake;
+import org.usfirst.frc.team5431.libs.PneumaticBase;
 import org.usfirst.frc.team5431.libs.TurretBase;
 import org.usfirst.frc.team5431.libs.Vision;
 import org.usfirst.frc.team5431.map.OI;
@@ -32,6 +33,7 @@ public class Robot extends IterativeRobot {
     private Intake intake;
     private OI oi;
     private Vision vision;
+    private PneumaticBase pneumatic;
     public static DigitalInput boulderLimit;
 	private EncoderBase encoder;
     private boolean runOnce = false; //Don't mess with please
@@ -50,6 +52,7 @@ public class Robot extends IterativeRobot {
     	oi = new OI(); //Joystick mapping
 		boulderLimit = new DigitalInput(SensorMap.intakeLimit);
     	encoder = new EncoderBase();
+    	pneumatic = new PneumaticBase();
 		
        	intake.setSpeed(1);
         turret.setSpeed(0.7);
@@ -57,6 +60,8 @@ public class Robot extends IterativeRobot {
         auton_select = new SendableChooser();
         auton_select.addDefault("AutoShoot Lowbar", AutoTask.AutoShoot);
         auton_select.addObject("StandStill", AutoTask.StandStill);
+        
+        pneumatic.startCompressor();
         
         SmartDashboard.putData("Auto choices", auton_select);
     }
@@ -104,8 +109,8 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	intake.checkInput(oi);
-    	turret.checkInput(oi);
+    	//intake.checkInput(oi);
+    	//turret.checkInput(oi);
     	drive.checkInput(oi);
     }
     

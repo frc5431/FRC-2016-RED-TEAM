@@ -165,7 +165,7 @@ public class Vision {
 		this.updateSmartDash(0, 0);
 	}
 
-	private double[] updateSmartDash(double readyVal, double offVal) {
+	public double[] updateSmartDash(double readyVal, double offVal) {
 		
 		double[] toReturn = {0};
 		
