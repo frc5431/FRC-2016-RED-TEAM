@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  */ 
 public final class OI {
 	/**
-	 * Defines that the joystick channel is {@value #JOYSTICK}.
+	 * Constant which defines an button or joystick ID
 	 */
 	public static final int 
 			JOYSTICK_DRIVE = 0, 
@@ -43,7 +43,7 @@ public final class OI {
 	}
 
 	/**
-	 * Returns the controlling joystick.
+	 * Returns the controlling {@linkplain Joystick joystick} which controls {@linkplain DriveBase driving}.
 	 * 
 	 * @return the connected joystick
 	 */
@@ -51,6 +51,11 @@ public final class OI {
 		return drive;
 	}
 	
+	/**
+	 * Returns the controlling {@linkplain Joystick joystick} which controls the {@linkplain TurretBase turret}.
+	 * 
+	 * @return the connected joystick
+	 **/
 	public Joystick getGunController() {
 		return gun;
 	}
@@ -77,18 +82,38 @@ public final class OI {
 		return intake.get();
 	}
 
+	/**
+	 * Checks the left Y axis on the driving joystick.
+	 * 
+	 * @return Value of the left Y axis, from -1 to 1.
+	 * @see #getDriveController
+	 * */
 	public double getDriveLeftYAxis() {
 		return drive.getRawAxis(driveLY);
 	}
 
+	/**
+	 * Checks the right Y axis on the driving joystick.
+	 * 
+	 * @return Value of the right Y axis, from -1 to 1.
+	 * @see #getDriveController
+	 * */
 	public double getDriveRightYAxis() {
 		return drive.getRawAxis(driveRY);
 	}
 	
+	/**
+	 * Checks to see if the button to have the solonoid outut is down.
+	 * @return Whether {@JoystickButton the button} bound to the ID of {@value #driveSolOUt} is down
+	 * */
 	public boolean isSolOut() {
 		return solOut.get();
 	}
 	
+	/**
+	 * Checks to see if the button to have the solonoid input is down.
+	 * @return Whether {@JoystickButton the button} bound to the ID of {@value #driveSolIn} is down
+	 * */
 	public boolean isSolIn() {
 		return solIn.get();
 	}
