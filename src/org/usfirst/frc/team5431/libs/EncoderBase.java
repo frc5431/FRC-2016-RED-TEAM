@@ -6,6 +6,11 @@ import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.Encoder;;
 
+/**
+ * Class which handles encoders and counters to make sure the {@linkplain TurretBase shooter} is accurate.
+ * 
+ * @author Team 5431
+ * */
 public class EncoderBase {
 
 	private Encoder Left, Right;
@@ -13,6 +18,9 @@ public class EncoderBase {
 	private static final double distancePerPulse = ((Math.PI * 10)/28);
 	private static final int samples = 7;
 	
+	/**
+	 * Default constructor which handles {@link Encoder encoders} and {@link Counter counters}.
+	 **/
 	public EncoderBase() {
 		this.Left = new Encoder((SensorMap.frontLeftEncoder1), (SensorMap.frontLeftEncoder2), false, EncodingType.k4X);
 		this.Right = new Encoder((SensorMap.frontRightEncoder1), (SensorMap.frontRightEncoder2), false, EncodingType.k4X);
@@ -30,6 +38,10 @@ public class EncoderBase {
         this.FlyRight.setSamplesToAverage(samples);
 	}
 	
+	/**
+	 * Resets the {@link Counter counters} and {@link Encoder encoders}.
+	 * 
+	 */
 	public void resetModules() {
         this.Left.reset();
         this.Right.reset();
@@ -37,14 +49,26 @@ public class EncoderBase {
         this.FlyRight.reset();
 	}
 	
+	/**
+	 *Calculates the rotations per minute of the left flywheel.
+	 * @return The RPM of the left fly wheel according to the {@link Counter counter}
+	 */
 	public double leftFlyRPM() {
 		return  (60/(7 * this.FlyLeft.getPeriod()));
 	}
 	
+	/**
+	 *Calculates the rotations per minute of the right flywheel.
+	 * @return The RPM of the right fly wheel according to the {@link Counter counter}
+	 */
 	public double rightFlyRPM() {
 		return  (60/(7 * this.FlyRight.getPeriod()));
 	}
 	
+	/**
+	 * @deprecated Have no idea what is going on here.
+	 */
+	@Deprecated
 	public double[] setSpeed(double speed) {
 		double[] temp = {speed, speed};
 		if(this.leftFlyRPM() < this.rightFlyRPM()) {
@@ -53,15 +77,28 @@ public class EncoderBase {
 		return temp;
 	}
 	
+	/**
+	 * Resets the distance on the {@linkplain Counter counters}.
+	 */
 	public void resetDrive() {
 		this.Left.reset();
 		this.Right.reset();
 	}
 	
+	/**
+	 * Calculates the distance the left flywheel moved since the last time {@link #resetDrive()} was called.
+	 * 
+	 * @return Distance the left flywheel went according to the {@link Counter counters}.
+	 */
 	public double LeftDistance() {
 		return this.Left.getDistance();
 	}
 	
+	/**
+	 * Calculates the distance the left flywheel moved since the last time {@link #resetDrive()} was called.
+	 * 
+	 * @return Distance the left flywheel went according to the {@link Counter counters}.
+	 */
 	public double RightDistance() {
 		return this.Right.getDistance();
 	}
