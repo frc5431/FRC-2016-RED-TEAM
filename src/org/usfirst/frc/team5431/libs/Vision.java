@@ -6,12 +6,13 @@ package org.usfirst.frc.team5431.libs;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+//Private class to calculate items based on camera position(Liav can you do better docs on this?) (sure)
+
 /**
+ * Private inline class for {@link Vision} with various helper methods.
  * @author Team5431
  *
  */
-
-//Private class to calculate items based on camera position(Liav can you do better docs on this?)
 class Maths {
 	
 	//Choose hole options (Total should be 1.0)
@@ -29,15 +30,36 @@ class Maths {
 			leftTrig = -10,
 			rightTrig = 10;
 			
-	
+	/**
+	 * Calculates the distance of a location
+	 * <p>
+	 * <b>Make sure to pretest the values</b>
+	 * 
+	 * @param pixelsFromTop Number of pixels from the top
+	 * @return The distance from the hole
+	 * */
 	public double DistanceCalc(double pixelsFromTop) {
 		return (33.8569 * Math.pow(1.007, pixelsFromTop)); //Make sure you pre test these values
 	}
 	
+	/**
+	 * Checks the distance of a location from the center of the camera
+	 * @param half Center of the camera, in pixels
+	 * @param current Location to check
+	 * @return Distance from the center of the camera, in pixels. Negative values means it's to the left. 
+	 * */
 	public double fromCenter(double half, double current) {
 		return current - half;
 	}
 	
+	/**
+	 * Returns which hole to use based on various info
+	 * @param areas Array with the area of each hole, where each index refers to a hole (array[0]=hole 0)
+	 * @param distances Array with the distance of each hole from the camera, where each index refers to a hole (array[0]=hole 0)
+	 * @param solidity  Array with the solidity of each hole, where each index refers to a hole (array[0]=hole 0)
+	 * @param fromCenter Array with the distance of each hole from the center of the camera in pixels, where each index refers to a hole (array[0]=hole 0.) Negative means to the left.
+	* @return Hole ID based on the parameters. If 666 is returned, no hole was found.
+	 * */
 	public int chooseHole(double[] areas, double[] distances, double[] solidity, double[] fromCenter)
     {	
 		int amount = areas.length;
@@ -77,12 +99,24 @@ class Maths {
     }
 	
 	//See if number is within two other numbers
+	/**
+	 * Checks to see if a number is within two other numbers
+	 * @param num Number to compare
+	 * @param lower Lower bound
+	 * @param upper Upper bound
+	 * @return Whether num is within lower and upper bounds.
+	 * */
     public boolean withIn(double num, double lower, double upper) {
     	return ((num >= lower) && (num <= upper));
     }
 	
 }
 
+/**
+ * Class which calculates where to shoot based on various factors, and stores it in a {@link NetowrkTable}
+ * 
+ * @see TurretBase
+ * */
 public class Vision {
 
 	private static NetworkTable grip;
@@ -90,6 +124,9 @@ public class Vision {
 	private final double[] defaults = {0};
 	
 	//Holders for updates
+	/**
+	 * Holder variable for updates
+	 * */
 	public static double[]
 			areas = {0},
 			distances = {0},
@@ -97,11 +134,21 @@ public class Vision {
 			holeSolids = {0};
 			
 	
+	/**
+	 * Default constructor
+	 * */
 	public Vision() {
 		grip = NetworkTable.getTable("GRIP/vision");
 		math = new Maths();
 	}
 	
+	/**
+	 * Updates holder values for the holes.
+	 * @see #areas
+	 * @see #distances
+	 * @see #fromCenters
+	 * @see #holeSolids
+	 * */
 	public void updateVals() {
 		areas = this.area();
 		distances = this.distance();
@@ -109,11 +156,16 @@ public class Vision {
 		holeSolids = this.solidity();
 	}
 	
+	/**
+	 * Updates the {@linkplain SmartDashboard} with the new values.
+	 * 
+	 * @see #updateVals()
+	 * */
 	public void updateSmartDash() {
 		this.updateSmartDash(0, 0);
 	}
-	
-	public double[] updateSmartDash(double readyVal, double offVal) {
+
+	private double[] updateSmartDash(double readyVal, double offVal) {
 		
 		double[] toReturn = {0};
 		
@@ -159,20 +211,38 @@ public class Vision {
 		
 	}
 	
+	/**
+	 * Stops the {@linkplain NetworkTable} safely, to stop any errors.
+	 * */
 	public void stop() {
 		NetworkTable.shutdown(); //Shutdown table so we don't get dumb error
 	}
 	
+	/**
+	 * Gets the X value of all the holes from the {@link NetworkTable}
+	 * 
+	 * @return Array of all the hole values, where the index is the hole ID. If an array of 0 is returned, a problem occured.
+	 * */
 	public double[] getX() {
 		final double holesY[] = grip.getNumberArray("centerX", this.defaults);
 		return (this.mult(holesY)) ? holesY : this.defaults; //Same for all below return array 0 if a problem
 	}
 	
+	/**
+	 * Gets the Y value of all the holes from the {@link NetworkTable}
+	 * 
+	 	 * @return Array of all the hole values, where the index is the hole ID. If an array of 0 is returned, a problem occured.
+
+	 * */
 	public double[] getY() {
 		final double holesX[] = grip.getNumberArray("centerY", this.defaults);
 		return (this.mult(holesX)) ? holesX : this.defaults;
 	}
 	
+	/**
+	 * Gets the distance value of all the holes from the {@link NetworkTable}
+	 * @return Array of all the hole values, where the index is the hole ID. If an array of 0 is returned, a problem occured.
+	 * */
 	public double[] distance() {
 		final double objects[] = 
 				this.getX(), 
@@ -185,6 +255,13 @@ public class Vision {
 		return distances;
 	}
 	
+	/**
+	 * Gets the distance from the center of the screen in pixels of all the holes from the {@link NetworkTable}
+	 * 
+	 * @param HalfSize Center of the camera vision in pixels
+	 * @return Array of all the hole values, where the index is the hole ID. If an array of 0 is returned, a problem occured.
+
+	 * */
 	public double[] fromCenter(double HalfSize) {
 		final double objects[] = 
 				this.getX(),
@@ -198,6 +275,11 @@ public class Vision {
 	}
 	
     //check if returned array is good
+    /**
+     * Checks an array to make sure it is valid
+     * @return whether the array is good and valid.
+     * @param multi Array to validate
+     * */
     private boolean mult(double[] multi) {
     	try  {
     		return (multi[0] != 0 && multi.length >= 1); //If no error in array (Null) then return array
@@ -207,11 +289,23 @@ public class Vision {
     	}
     }
 	
+	/**
+	 * Gets the area of all the holes from the {@link NetworkTable}
+
+	 * @param Array of all the hole values, where the index is the hole ID. If an array of 0 is returned, a problem occured.
+
+	 * */
 	public double[] area() { //Get area for each object
 		final double areas[] = grip.getNumberArray("area", this.defaults);
 		return (this.mult(areas)) ? areas : this.defaults;
 	}
 	
+	/**
+	 * Gets the solidity of all the holes from the {@link NetworkTable}
+
+	 	 * @param Array of all the hole values, where the index is the hole ID. If an array of 0 is returned, a problem occured.
+
+	 * */
 	public double[] solidity() { //Get solidity of object 0-100
 		final double solidities[] = grip.getNumberArray("solidity", this.defaults);
 		return (this.mult(solidities)) ? solidities : this.defaults;
