@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.CANTalon;
  * This class contains a toggle for whether it is shooting.
  * <p>
  * The {@linkplain CANTalon motor ID} for the left flywheel is
- * {@value MotorMap#LeftFly}. The right flywheel is {@value MotorMap#RightFly}.
+ * {@value MotorMap#LEFT_FLY}. The right flywheel is {@value MotorMap#RIGHT_FLY}.
  * 
  * @see Robot
  * @see MotorMap
@@ -31,12 +31,12 @@ public class TurretBase {
 
 	/**
 	 * Default constructor for {@code TurretBase}. Binds the
-	 * {@linkplain CANTalon left motor} to {@value MotorMap#LeftFly} and the
-	 * {@linkplain CANTalon right motor} to {@value MotorMap#RightFly}.
+	 * {@linkplain CANTalon left motor} to {@value MotorMap#LEFT_FLY} and the
+	 * {@linkplain CANTalon right motor} to {@value MotorMap#RIGHT_FLY}.
 	 */
 	public TurretBase() {
-		this.Left = new CANTalon(MotorMap.LeftFly);
-		this.Right = new CANTalon(MotorMap.RightFly);
+		this.Left = new CANTalon(MotorMap.LEFT_FLY);
+		this.Right = new CANTalon(MotorMap.RIGHT_FLY);
 
 		this.Left.enable();
 		this.Right.enable();

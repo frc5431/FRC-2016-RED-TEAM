@@ -32,10 +32,10 @@ public class DriveBase {
 	 * */
 	public DriveBase(boolean brakeMode)
 	{
-		this.rearleft = new CANTalon(MotorMap.RearLeft);
-		this.frontleft = new CANTalon(MotorMap.FrontLeft);
-		this.rearright = new CANTalon(MotorMap.RearRight);
-		this.frontright = new CANTalon(MotorMap.FrontRight);
+		this.rearleft = new CANTalon(MotorMap.REAR_LEFT);
+		this.frontleft = new CANTalon(MotorMap.FRONT_LEFT);
+		this.rearright = new CANTalon(MotorMap.REAR_RIGHT);
+		this.frontright = new CANTalon(MotorMap.FRONT_RIGHT);
 		
 		this.rearleft.enable();
 		this.frontleft.enable();

@@ -27,12 +27,12 @@ public class Intake {
 
 	/**
 	 * Default constructor for {@code TurretBase}. Binds the
-	 * {@linkplain CANTalon top motor} to {@value MotorMap#IntakeTop} and the
-	 * {@linkplain CANTalon bot motor} to {@value MotorMap#IntakeBot}.
+	 * {@linkplain CANTalon top motor} to {@value MotorMap#INTAKE_TOP} and the
+	 * {@linkplain CANTalon bot motor} to {@value MotorMap#INTAKE_BOT}.
 	 */
 	public Intake() {
-		this.top = new CANTalon(MotorMap.IntakeTop);
-		this.bot = new CANTalon(MotorMap.IntakeBot);
+		this.top = new CANTalon(MotorMap.INTAKE_TOP);
+		this.bot = new CANTalon(MotorMap.INTAKE_BOT);
 
 		this.top.enable();
 		this.bot.enable();

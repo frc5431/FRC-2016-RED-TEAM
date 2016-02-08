@@ -17,12 +17,12 @@ public final class OI {
 	public static final int 
 			JOYSTICK_DRIVE = 0, 
 			JOYSTICK_GUN = 0, 
-			driveLY = 1, 
-			driveRY = 4,
-			gunTrigger = 1, 
-			driveIntake = 1,
-			driveSolIn = 2,
-			driveSolOut = 3;
+			DRIVE_LEFT_Y = 1, 
+			DRIVE_RIGHT_Y = 4,
+			GUN_TRIGGER = 1, 
+			DRIVE_INTAKE = 1,
+			DRIVE_SOL_IN = 2,
+			DRIVE_SOL_OUT = 3;
 	
 	private final Joystick drive, gun;
 	private final JoystickButton intake, shoot, solIn, solOut;
@@ -35,11 +35,11 @@ public final class OI {
 		drive = new Joystick(JOYSTICK_DRIVE);
 		gun = new Joystick(JOYSTICK_GUN);
 		
-		shoot = new JoystickButton(gun, gunTrigger);
-		intake = new JoystickButton(drive, driveIntake);
+		shoot = new JoystickButton(gun, GUN_TRIGGER);
+		intake = new JoystickButton(drive, DRIVE_INTAKE);
 		
-		solIn = new JoystickButton(drive, driveSolIn);
-		solOut = new JoystickButton(drive, driveSolOut);
+		solIn = new JoystickButton(drive, DRIVE_SOL_IN);
+		solOut = new JoystickButton(drive, DRIVE_SOL_OUT);
 	}
 
 	/**
@@ -89,7 +89,7 @@ public final class OI {
 	 * @see #getDriveController
 	 * */
 	public double getDriveLeftYAxis() {
-		return drive.getRawAxis(driveLY);
+		return drive.getRawAxis(DRIVE_LEFT_Y);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public final class OI {
 	 * @see #getDriveController
 	 * */
 	public double getDriveRightYAxis() {
-		return drive.getRawAxis(driveRY);
+		return drive.getRawAxis(DRIVE_RIGHT_Y);
 	}
 	
 	/**
@@ -112,7 +112,7 @@ public final class OI {
 	
 	/**
 	 * Checks to see if the button to have the solonoid input is down.
-	 * @return Whether {@JoystickButton the button} bound to the ID of {@value #driveSolIn} is down
+	 * @return Whether {@JoystickButton the button} bound to the ID of {@value #DRIVE_SOL_IN} is down
 	 * */
 	public boolean isSolIn() {
 		return solIn.get();

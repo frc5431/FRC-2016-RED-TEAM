@@ -59,7 +59,7 @@ public class Robot extends IterativeRobot {
     	intake=new Intake();
     	drive = new DriveBase();
     	oi = new OI(); //Joystick mapping
-		boulderLimit = new DigitalInput(SensorMap.intakeLimit);
+		boulderLimit = new DigitalInput(SensorMap.INTAKE_LIMIT);
     	encoder = new EncoderBase();
     	pneumatic = new PneumaticBase();
 		

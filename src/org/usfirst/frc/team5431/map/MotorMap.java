@@ -10,44 +10,44 @@ public final class MotorMap {
 	private MotorMap(){}
 	
 	/**
-	 * Channel ID for the left flywheel in the shooter mechanism, which is {@value #LeftFly}
+	 * Channel ID for the left flywheel in the shooter mechanism, which is {@value #LEFT_FLY}
 	 * @see Robot
 	 **/
-	public static final int LeftFly = 9;
+	public static final int LEFT_FLY = 9;
 		/**
-	 * Channel ID for the right flywheel in the shooter mechanism, which is {@value #RightFly}
+	 * Channel ID for the right flywheel in the shooter mechanism, which is {@value #RIGHT_FLY}
 	 * @see Robot
 	 **/
-	public static final int RightFly = 5;
+	public static final int RIGHT_FLY = 5;
 	/**
- * Channel ID for the top intake motor in the shooter mechanism, which is {@value #IntakeTop}
+ * Channel ID for the top intake motor in the shooter mechanism, which is {@value #INTAKE_TOP}
  * @see Robot
  **/
-	public static final int IntakeTop = 6;
+	public static final int INTAKE_TOP = 6;
 	/**
- * Channel ID for the bottom intake motor in the shooter mechanism, which is {@value #IntakeBot}
+ * Channel ID for the bottom intake motor in the shooter mechanism, which is {@value #INTAKE_BOT}
  * @see Robot
  **/
-	public static final int IntakeBot=7;
+	public static final int INTAKE_BOT=7;
 	/**
- * Channel ID for the front right wheel on the drive base, which is {@value #FrontRight}
+ * Channel ID for the front right wheel on the drive base, which is {@value #FRONT_RIGHT}
  * @see Robot
  **/
-	public static final int FrontRight = 3;
+	public static final int FRONT_RIGHT = 3;
 	/**
- * Channel ID for the front left wheel on the drive base, which is {@value #FrontLeft}
+ * Channel ID for the front left wheel on the drive base, which is {@value #FRONT_LEFT}
  * @see Robot
  **/
-	public static final int FrontLeft = 2;
+	public static final int FRONT_LEFT = 2;
 	/**
- * Channel ID for the rear right wheel on the drive base, which is {@value #RearRight}
+ * Channel ID for the rear right wheel on the drive base, which is {@value #REAR_RIGHT}
  * @see Robot
  **/
-	public static final int RearRight = 8;
+	public static final int REAR_RIGHT = 8;
 	/**
- * Channel ID for the rear left wheel on the drive base, which is {@value #RearLeft}
+ * Channel ID for the rear left wheel on the drive base, which is {@value #REAR_LEFT}
  * @see Robot
  **/
-	public static final int RearLeft =4;
+	public static final int REAR_LEFT =4;
 
 }

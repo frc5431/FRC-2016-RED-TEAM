@@ -22,11 +22,11 @@ public class EncoderBase {
 	 * Default constructor which handles {@link Encoder encoders} and {@link Counter counters}.
 	 **/
 	public EncoderBase() {
-		this.Left = new Encoder((SensorMap.frontLeftEncoder1), (SensorMap.frontLeftEncoder2), false, EncodingType.k4X);
-		this.Right = new Encoder((SensorMap.frontRightEncoder1), (SensorMap.frontRightEncoder2), false, EncodingType.k4X);
+		this.Left = new Encoder((SensorMap.FRONT_LEFT_ENCODER_1), (SensorMap.FRONT_LEFT_ENCODER_2), false, EncodingType.k4X);
+		this.Right = new Encoder((SensorMap.FRONT_RIGHT_ENCODER_1), (SensorMap.FRONT_RIGHT_ENCODER_2), false, EncodingType.k4X);
 		
-		this.FlyLeft = new Counter(SensorMap.FlyWheelLeftCounter);
-		this.FlyRight = new Counter(SensorMap.FlyWheelRightCounter);
+		this.FlyLeft = new Counter(SensorMap.FLY_WHEEL_LEFT_COUNTER);
+		this.FlyRight = new Counter(SensorMap.FLY_WHEEL_RIGHT_COUNTER);
 		
         this.Left.setDistancePerPulse(distancePerPulse);
         this.Right.setDistancePerPulse(distancePerPulse);
