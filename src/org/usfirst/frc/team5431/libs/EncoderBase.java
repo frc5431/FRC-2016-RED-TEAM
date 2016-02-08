@@ -64,18 +64,7 @@ public class EncoderBase {
 	public double rightFlyRPM() {
 		return  (60/(7 * this.FlyRight.getPeriod()));
 	}
-	
-	/**
-	 * @deprecated Have no idea what is going on here.
-	 */
-	@Deprecated
-	public double[] setSpeed(double speed) {
-		double[] temp = {speed, speed};
-		if(this.leftFlyRPM() < this.rightFlyRPM()) {
-			return temp;
-		}
-		return temp;
-	}
+
 	
 	/**
 	 * Resets the distance on the {@linkplain Counter counters}.
