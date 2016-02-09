@@ -52,9 +52,10 @@ public class Robot extends IterativeRobot {
 	/**
 	 * Holder value whose value is changed by other threads.
 	 */
-	public static volatile double onTarget = 0.7, // Value to shoot at target
+	public static volatile double 
+			onTarget = 0.7, // Value to shoot at target
 			offTarget = 0.2; // Value to idle flyWheels
-
+	
 	/**
 	 * Method called once in a {@linkplain Robot robot's} lifetime.
 	 */
@@ -67,7 +68,7 @@ public class Robot extends IterativeRobot {
 		oi = new OI(); // Joystick mapping
 		boulderLimit = new DigitalInput(SensorMap.INTAKE_LIMIT);
 		encoder = new EncoderBase();
-		pneumatic = new PneumaticBase();
+		//pneumatic = new PneumaticBase();
 		vision = new Vision();
 
 		intake.setSpeed(1);
@@ -80,6 +81,9 @@ public class Robot extends IterativeRobot {
 		pneumatic.startCompressor();
 
 		SmartDashboard.putData("Auto choices", auton_select);
+		
+		//Start vision thread
+		new VisionThread().start();
 	}
 
 	/**
@@ -132,8 +136,8 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
-		// intake.checkInput(oi);
-		// turret.checkInput(oi);
+		intake.checkInput(oi);
+		turret.checkInput(oi);
 		drive.checkInput(oi);
 		// pneumatic.checkInput(oi);
 	}
@@ -187,9 +191,13 @@ class VisionThread extends Thread {
 	 * Default constructor.
 	 */
 	public VisionThread() {
+		try{
 		vision = new Vision();
 		onTarget = Robot.onTarget;
 		offTarget = Robot.offTarget;
+		}catch(Throwable e){
+		e.printStackTrace();
+	}
 	}
 
 	/**
@@ -197,10 +205,14 @@ class VisionThread extends Thread {
 	 */
 	@Override
 	public void run() {
+		try{
 		while (true) {
 			vision.updateVals();
 			Robot.autoAimVals = vision.updateSmartDash(onTarget, offTarget);
 			Timer.delay(0.01);
+		}
+		}catch(Throwable e){
+			e.printStackTrace();
 		}
 
 	}
