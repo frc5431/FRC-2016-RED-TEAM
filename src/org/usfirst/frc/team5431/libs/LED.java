@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Timer;
  * Class which handles the LED strip that goes around the robot.
  * <p>
  * Used by {@linkplain Vision the Vision class} to allow the driver to see where to turn.
- * @author AcademyHS Robotics
+ * @author AcademyHS Robotics Team 5431
  *
  */
 public class LED {

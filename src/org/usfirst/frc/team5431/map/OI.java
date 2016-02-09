@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  * Class which contains all of the user input, including a {@linkplain Joystick
  * joystick}. Classes will ask for it to get the input at that time. The methods update real-time.
  * 
- * @author AcademyHS Robotics
+ * @author AcademyHS Robotics Team 5431
  * @see Robot
  */ 
 public final class OI {

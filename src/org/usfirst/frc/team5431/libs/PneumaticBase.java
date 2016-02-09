@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /**
  * Class that handles the pnuematics of the lift mechanism
+ * @author AcademyHS Robotics Team 5431
  * */
 public class PneumaticBase {
 

@@ -2,7 +2,7 @@ package org.usfirst.frc.team5431.map;
 
 /**
  * Class that defines the ID's for the motors.
- * 
+ * @author AcademyHS Robotics Team 5431
  * @see CANTalon
  **/
 public final class MotorMap {

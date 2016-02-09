@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Encoder;;
 /**
  * Class which handles encoders and counters to make sure the {@linkplain TurretBase shooter} is accurate.
  * 
- * @author Team 5431
+ * @author AcademyHS Robotics Team 5431
  * */
 public class EncoderBase {
 

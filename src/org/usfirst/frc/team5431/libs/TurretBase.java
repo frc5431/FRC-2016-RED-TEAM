@@ -18,8 +18,10 @@ import edu.wpi.first.wpilibj.CANTalon;
  * The {@linkplain CANTalon motor ID} for the left flywheel is
  * {@value MotorMap#LEFT_FLY}. The right flywheel is {@value MotorMap#RIGHT_FLY}.
  * 
+ * 
  * @see Robot
  * @see MotorMap
+ * @author AcademyHS Robotics Team 5431
  **/
 public class TurretBase {
 

@@ -17,10 +17,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * This is the code for red teams (There are two robots building and red is
- * awesome) Look under the libs package to see where all the main classes are
- * split up This Robot.java is just the main thread(s) that will be controlling
- * those classes Have your looksez
+ * This is the code for red team of Team 5431(There are two robots building and red is
+ * awesome.) Look under the libs package to see where all the main classes are
+ * split up. This Robot.java is just the main thread(s) that will be controlling
+ * those classes.
+ * @author AcademyHS Robotics Team 5431
  */
 public class Robot extends IterativeRobot {
 

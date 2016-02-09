@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
  * Contains a toggle for the intake, which is specified by the
  * {@link #checkInput(OI)} method.
  * 
- * @author AcademyHS Robotics
+ * @author AcademyHS Robotics Team 5431
  *
  */
 public class Intake {

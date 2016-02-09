@@ -2,7 +2,7 @@ package org.usfirst.frc.team5431.map;
 
 /**
  * Class which defines various constants for {@link Solonoid Solonoids}
- * @author AcademyHS Robotics
+ * @author AcademyHS Robotics Team 5431
  *
  */
 public class SolonoidMap {

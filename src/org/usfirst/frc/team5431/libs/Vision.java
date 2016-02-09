@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Private inline class for {@link Vision} with various helper methods.
- * @author Team5431
+ * @author AcademyHS Robotics Team 5431
  *
  */
 class Maths {
@@ -118,6 +118,7 @@ class Maths {
  * Additionally, adjusts the {@linkplain LED LEDs} based on when you can shoot.
  * 
  * @see TurretBase
+ * @author AcademyHS Robotics Team 5431
  * */
 public class Vision {
 
