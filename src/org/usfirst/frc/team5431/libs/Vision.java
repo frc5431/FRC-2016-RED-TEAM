@@ -113,7 +113,9 @@ class Maths {
 }
 
 /**
- * Class which calculates where to shoot based on various factors, and stores it in a {@link NetowrkTable}
+ * Class which calculates where to shoot based on various factors, and stores it in a {@link NetowrkTable}.
+ * <p>
+ * Additionally, adjusts the {@linkplain LED LEDs} based on when you can shoot.
  * 
  * @see TurretBase
  * */
