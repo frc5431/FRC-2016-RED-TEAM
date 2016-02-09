@@ -121,6 +121,7 @@ public class Vision {
 
 	private static NetworkTable grip;
 	private static Maths math;
+	private static LED led;
 	private final double[] defaults = {0};
 	
 	//Holders for updates
@@ -140,6 +141,7 @@ public class Vision {
 	public Vision() {
 		grip = NetworkTable.getTable("GRIP/vision");
 		math = new Maths();
+		led = new LED();
 	}
 	
 	/**
@@ -198,18 +200,39 @@ public class Vision {
 			if((forback == 0) && (lefight == 0)) {
 				SmartDashboard.putString("FIRE", "YES FIRE!");
 				SmartDashboard.putString("PULL", "YES FIRE!");	
+				led.LEDFromColor("green");
 				toReturn[0] = readyVal;
 				toReturn[1] = 0;
 				toReturn[2] = 0;
 			} else {
-				SmartDashboard.putString("PULL", ((forback == 0) ? "" : (forback == 1) ? "Drive Back!" : "Drive Forward!")); //Display to the dashboard
-				SmartDashboard.putString("FIRE", ((lefight == 0) ? "" : (lefight == 1) ? "Turn Left!" : "Turn Right!")); //Display to the dashboard
+				String pulling = "";
+				String firing = "";
+				if (forback == 1) {
+					pulling = "Drive Back!";
+					led.LEDFromColor("blue");
+				}else if(forback == 2) {
+					pulling = "Drive Forward!";
+					led.LEDFromColor("cyan");
+				}
+				if(lefight == 1) {
+					firing = "Turn Left!";
+					led.LEDFromColor("yellow");
+				} else if(lefight == 2) {
+					firing = "Turn Right!";
+					led.LEDFromColor("purple");
+				}
+				SmartDashboard.putString("PULL", pulling);
+				SmartDashboard.putString("FIRE", firing);
+				
+				//SmartDashboard.putString("PULL", ((forback == 0) ? "" : (forback == 1) ?  : "Drive Forward!")); //Display to the dashboard
+				//SmartDashboard.putString("FIRE", ((lefight == 0) ? "" : (lefight == 1) ? "Turn Left!" : "Turn Right!")); //Display to the dashboard
 				toReturn[0] = ((readyVal+offVal)/2) - 0.05;
 				toReturn[1] = lefight;
 				toReturn[2] = forback;
 			}
 		} else {
 			SmartDashboard.putString("FIRE", "HOLE NOT FOUND!");
+			led.LEDFromColor("red");
 			toReturn[0] = offVal;
 			toReturn[1] = 0;
 			toReturn[2] = 0;
