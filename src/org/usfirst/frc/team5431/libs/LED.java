@@ -1,5 +1,7 @@
 package org.usfirst.frc.team5431.libs;
 
+import org.usfirst.frc.team5431.map.SolonoidMap;
+
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -17,9 +19,9 @@ public class LED {
 	 * Default constructor which maps the {@link Solenoid solenoids} to their respective ID.
 	 */
 	public LED() {
-	    r = new Solenoid(2);
-	    g = new Solenoid(0);
-	    b = new Solenoid(1);
+	    r = new Solenoid(SolonoidMap.LED_RED);
+	    g = new Solenoid(SolonoidMap.LED_GREEN);
+	    b = new Solenoid(SolonoidMap.LED_BLUE);
 	}
 	
 	/**

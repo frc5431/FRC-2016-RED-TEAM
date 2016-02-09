@@ -1,5 +1,10 @@
 package org.usfirst.frc.team5431.map;
 
+/**
+ * Class which defines various constants for {@link Encoder Encoders} and {@link Counter Counters}
+ * @author AcademyHS Robotics
+ *
+ */
 public class SensorMap {
 	
 	/**
