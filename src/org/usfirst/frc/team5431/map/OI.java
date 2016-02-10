@@ -18,14 +18,15 @@ public final class OI {
 			JOYSTICK_DRIVE = 0, 
 			JOYSTICK_GUN = 0, 
 			DRIVE_LEFT_Y = 1, 
-			DRIVE_RIGHT_Y = 4,
+			DRIVE_RIGHT_Y = 5,
 			GUN_TRIGGER = 1, 
-			DRIVE_INTAKE = 1,
+			DRIVE_INTAKE = 2,
+			DRIVE_INTAKE_BACKWARDS=3,
 			DRIVE_SOL_IN = 2,
 			DRIVE_SOL_OUT = 3;
 	
 	private final Joystick drive, gun;
-	private final JoystickButton intake, shoot, solIn, solOut;
+	private final JoystickButton intake, shoot, solIn, solOut,intakeback;
 	
 
 	/**
@@ -37,6 +38,7 @@ public final class OI {
 		
 		shoot = new JoystickButton(gun, GUN_TRIGGER);
 		intake = new JoystickButton(drive, DRIVE_INTAKE);
+		intakeback = new JoystickButton(drive,DRIVE_INTAKE_BACKWARDS);
 		
 		solIn = new JoystickButton(drive, DRIVE_SOL_IN);
 		solOut = new JoystickButton(drive, DRIVE_SOL_OUT);
@@ -116,6 +118,10 @@ public final class OI {
 	 * */
 	public boolean isSolIn() {
 		return solIn.get();
+	}
+	
+	public boolean isIntakingBackwards(){
+		return intakeback.get();
 	}
 
 	/* Not needed now

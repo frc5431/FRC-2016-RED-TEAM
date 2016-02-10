@@ -17,13 +17,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * This is the code for red team of Team 5431(There are two robots building and red is
- * awesome.) Look under the libs package to see where all the main classes are
- * split up. This Robot.java is just the main thread(s) that will be controlling
- * those classes.
+ * This is the code for red team of Team 5431(There are two robots building and
+ * red is awesome.) Look under the libs package to see where all the main
+ * classes are split up. This Robot.java is just the main thread(s) that will be
+ * controlling those classes.
+ * 
  * @author AcademyHS Robotics Team 5431
  */
 public class Robot extends IterativeRobot {
+
+	public static LaunchType launch = LaunchType.RED;
+	public static enum LaunchType{
+		RED,BLUE,MAYOR
+	}
 
 	// Better than strings
 	enum AutoTask {
@@ -52,10 +58,9 @@ public class Robot extends IterativeRobot {
 	/**
 	 * Holder value whose value is changed by other threads.
 	 */
-	public static volatile double 
-			onTarget = 0.7, // Value to shoot at target
+	public static volatile double onTarget = 0.7, // Value to shoot at target
 			offTarget = 0.2; // Value to idle flyWheels
-	
+
 	/**
 	 * Method called once in a {@linkplain Robot robot's} lifetime.
 	 */
@@ -68,7 +73,7 @@ public class Robot extends IterativeRobot {
 		oi = new OI(); // Joystick mapping
 		boulderLimit = new DigitalInput(SensorMap.INTAKE_LIMIT);
 		encoder = new EncoderBase();
-		//pneumatic = new PneumaticBase();
+		// pneumatic = new PneumaticBase();
 		vision = new Vision();
 
 		intake.setSpeed(1);
@@ -78,12 +83,12 @@ public class Robot extends IterativeRobot {
 		auton_select.addDefault("AutoShoot Lowbar", AutoTask.AutoShoot);
 		auton_select.addObject("StandStill", AutoTask.StandStill);
 
-		pneumatic.startCompressor();
+		// pneumatic.startCompressor();
 
 		SmartDashboard.putData("Auto choices", auton_select);
-		
-		//Start vision thread
-		new VisionThread().start();
+
+		// Start vision thread
+		//new VisionThread().start();
 	}
 
 	/**
@@ -99,9 +104,9 @@ public class Robot extends IterativeRobot {
 	 */
 	public void lowbarMode() {
 		// Drive 15 feet
-		this.auto_driveStraight(156, 0.5, 0.05); //Distance (in), speed
+		this.auto_driveStraight(156, 0.5, 0.05); // Distance (in), speed
 		// (0-1), curve(0-0.1)
-		
+
 	}
 
 	/**
@@ -136,8 +141,10 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
-		intake.checkInput(oi);
-		turret.checkInput(oi);
+		if (launch!=LaunchType.BLUE) {
+			intake.checkInput(oi);
+			turret.checkInput(oi);
+		}
 		drive.checkInput(oi);
 		// pneumatic.checkInput(oi);
 	}
@@ -191,13 +198,13 @@ class VisionThread extends Thread {
 	 * Default constructor.
 	 */
 	public VisionThread() {
-		try{
-		vision = new Vision();
-		onTarget = Robot.onTarget;
-		offTarget = Robot.offTarget;
-		}catch(Throwable e){
-		e.printStackTrace();
-	}
+		try {
+			vision = new Vision();
+			onTarget = Robot.onTarget;
+			offTarget = Robot.offTarget;
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -205,13 +212,13 @@ class VisionThread extends Thread {
 	 */
 	@Override
 	public void run() {
-		try{
-		while (true) {
-			vision.updateVals();
-			Robot.autoAimVals = vision.updateSmartDash(onTarget, offTarget);
-			Timer.delay(0.01);
-		}
-		}catch(Throwable e){
+		try {
+			while (true) {
+				vision.updateVals();
+				Robot.autoAimVals = vision.updateSmartDash(onTarget, offTarget);
+				Timer.delay(0.01);
+			}
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 

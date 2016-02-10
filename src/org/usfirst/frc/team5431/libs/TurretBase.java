@@ -42,6 +42,8 @@ public class TurretBase {
 
 		this.Left.enable();
 		this.Right.enable();
+		Left.setInverted(true);
+		Right.setInverted(true);
 
 		this.Left.clearStickyFaults();
 		this.Right.clearStickyFaults();

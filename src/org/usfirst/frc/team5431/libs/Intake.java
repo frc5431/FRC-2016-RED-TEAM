@@ -36,11 +36,13 @@ public class Intake {
 
 		this.top.enable();
 		this.bot.enable();
+		//top.setInverted(true);
+		//bot.setInverted(true);
 
 		this.top.clearStickyFaults();
 		this.bot.clearStickyFaults();
 		
-		this.top.setInverted(true);
+		//this.top.setInverted(true);
 		
 		this.top.enableBrakeMode(true);
 		this.bot.enableBrakeMode(true);
@@ -100,9 +102,9 @@ public class Intake {
 	public void checkInput(OI map) {
 		//this is the code for the toggle.
 		if ((map.isIntaking() ? 0 : 1) > pastbutton) {
-			if (running && !boulderLimit.get()) {
+			if (running) {
 				setMotorSpeed(0);
-			} else if(!boulderLimit.get()) {
+			} else {
 				setMotorSpeed(speed);
 			}
 			intake();
@@ -110,15 +112,15 @@ public class Intake {
 		pastbutton = map.isIntaking() ? 0 : 1;
 		
 		//toggle gun
-		if ((map.isIntaking() ? 0 : 1) > pastbutton) {
-			if (running) {
-				setMotorSpeed(0);
-			} else if(!boulderLimit.get()) {
-				setMotorSpeed(speed);
-			}
-			intake();
-		}
-		pastbutton = map.isIntaking() ? 0 : 1;
+//		if ((map.isIntaking() ? 0 : 1) > pastbutton) {
+//			if (running) {
+//				setMotorSpeed(0);
+//			} else if(!boulderLimit.get()) {
+//				setMotorSpeed(speed);
+//			}
+//			intake();
+//		}
+//		pastbutton = map.isIntaking() ? 0 : 1;
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5431.libs;
 
 import org.usfirst.frc.team5431.map.OI;
+import org.usfirst.frc.team5431.robot.Robot;
 import org.usfirst.frc.team5431.map.MotorMap;
 
 import edu.wpi.first.wpilibj.CANTalon;
@@ -44,6 +45,13 @@ public class DriveBase {
 		this.frontleft.enable();
 		this.rearright.enable();
 		this.frontright.enable();
+		if (Robot.launch==Robot.LaunchType.BLUE) {
+			frontright.setInverted(true);
+			frontleft.setInverted(true);
+			rearleft.setInverted(true);
+		}
+		rearright.setInverted(true);
+
 
 		this.rearleft.clearStickyFaults();
 		this.frontleft.clearStickyFaults();
@@ -70,7 +78,10 @@ public class DriveBase {
 	 *            center, and 1 is the highest.
 	 */
 	public void drive(double left, double right) {
-		drive.tankDrive(left, right);
+		if (Robot.launch==Robot.LaunchType.BLUE) {
+			drive.tankDrive(left * 0.7, right * 0.7);
+		} else
+			drive.tankDrive(-left, -right);
 	}
 
 	/**
