@@ -28,7 +28,7 @@ public class Robot extends IterativeRobot {
 
 	public static LaunchType launch = LaunchType.RED;
 	public static enum LaunchType{
-		RED,BLUE,MAYOR
+		RED,BLUE,MAYOR()
 	}
 
 	// Better than strings
@@ -77,7 +77,7 @@ public class Robot extends IterativeRobot {
 		vision = new Vision();
 
 		intake.setSpeed(1);
-		turret.setSpeed(0.7);
+		turret.setSpeed(0.73);
 
 		auton_select = new SendableChooser();
 		auton_select.addDefault("AutoShoot Lowbar", AutoTask.AutoShoot);

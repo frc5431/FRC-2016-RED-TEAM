@@ -29,18 +29,18 @@ public final class MotorMap {
 	public static final int RIGHT_FLY;
 	/**
 	 * Channel ID for the top intake motor in the shooter mechanism, which is
-	 * {@value #INTAKE_TOP}
+	 * {@value #INTAKE}
 	 * 
 	 * @see Robot
 	 **/
-	public static final int INTAKE_TOP;
+	public static final int INTAKE;
 	/**
 	 * Channel ID for the bottom intake motor in the shooter mechanism, which is
 	 * {@value #INTAKE_BOT}
 	 * 
 	 * @see Robot
 	 **/
-	public static final int INTAKE_BOT;
+	public static final int UNUSED;
 	/**
 	 * Channel ID for the front right wheel on the drive base, which is
 	 * {@value #FRONT_RIGHT}
@@ -75,22 +75,22 @@ public final class MotorMap {
 		default:
 		case RED:
 		case MAYOR:
-			REAR_LEFT = 9;
-			REAR_RIGHT = 6;
+			REAR_LEFT = 4;
+			REAR_RIGHT = 3;
 			FRONT_LEFT = 2;
-			FRONT_RIGHT = 4;
-			INTAKE_BOT = 8;
-			INTAKE_TOP = 5;
-			RIGHT_FLY = 3;
-			LEFT_FLY = 7;
+			FRONT_RIGHT = 6;
+			UNUSED = 8;
+			INTAKE = 5;
+			RIGHT_FLY = 7;
+			LEFT_FLY = 9;
 			break;
 		case BLUE:
 			REAR_LEFT = 9;
 			REAR_RIGHT = 6;
 			FRONT_LEFT = 2;
 			FRONT_RIGHT = 4;
-			INTAKE_BOT = 8;
-			INTAKE_TOP = 5;
+			UNUSED= 8;
+			INTAKE = 5;
 			RIGHT_FLY = 3;
 			LEFT_FLY = 7;
 			break;

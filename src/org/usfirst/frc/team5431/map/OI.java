@@ -40,6 +40,7 @@ public final class OI {
 		intake = new JoystickButton(drive, DRIVE_INTAKE);
 		intakeback = new JoystickButton(drive,DRIVE_INTAKE_BACKWARDS);
 		
+		
 		solIn = new JoystickButton(drive, DRIVE_SOL_IN);
 		solOut = new JoystickButton(drive, DRIVE_SOL_OUT);
 	}
@@ -82,6 +83,10 @@ public final class OI {
 	 */
 	public boolean isIntaking() {
 		return intake.get();
+	}
+	
+	public boolean isRevIntaking() {
+		return intakeback.get();
 	}
 
 	/**

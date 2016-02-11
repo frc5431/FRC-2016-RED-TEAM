@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
  *
  */
 public class Intake {
-	private final CANTalon top, bot;
+	private final CANTalon top;
 	//true because it is inverted at the start. it won't actually start running
 	private boolean running = true;
 	private static DigitalInput boulderLimit;
@@ -27,25 +27,21 @@ public class Intake {
 
 	/**
 	 * Default constructor for {@code TurretBase}. Binds the
-	 * {@linkplain CANTalon top motor} to {@value MotorMap#INTAKE_TOP} and the
+	 * {@linkplain CANTalon top motor} to {@value MotorMap#INTAKE} and the
 	 * {@linkplain CANTalon bot motor} to {@value MotorMap#INTAKE_BOT}.
 	 */
 	public Intake() {
-		this.top = new CANTalon(MotorMap.INTAKE_TOP);
-		this.bot = new CANTalon(MotorMap.INTAKE_BOT);
-
+		this.top = new CANTalon(MotorMap.INTAKE);
+		
 		this.top.enable();
-		this.bot.enable();
 		//top.setInverted(true);
 		//bot.setInverted(true);
 
 		this.top.clearStickyFaults();
-		this.bot.clearStickyFaults();
 		
 		//this.top.setInverted(true);
 		
 		this.top.enableBrakeMode(true);
-		this.bot.enableBrakeMode(true);
 		
 		boulderLimit = Robot.boulderLimit;
 	}
@@ -57,7 +53,6 @@ public class Intake {
 	 */
 	public void intake() {
 		this.top.set(motorspeed);
-		this.bot.set(motorspeed);
 	}
 
 	/**
@@ -100,7 +95,8 @@ public class Intake {
 	 * @param map
 	 */
 	public void checkInput(OI map) {
-		//this is the code for the toggle.
+		//this is the code for the toggle
+
 		if ((map.isIntaking() ? 0 : 1) > pastbutton) {
 			if (running) {
 				setMotorSpeed(0);
@@ -109,7 +105,12 @@ public class Intake {
 			}
 			intake();
 		}
+		if(map.isIntakingBackwards()){
+			setMotorSpeed(-speed);
+		}
 		pastbutton = map.isIntaking() ? 0 : 1;
+		
+		
 		
 		//toggle gun
 //		if ((map.isIntaking() ? 0 : 1) > pastbutton) {

@@ -5,6 +5,7 @@ import org.usfirst.frc.team5431.robot.Robot;
 import org.usfirst.frc.team5431.map.MotorMap;
 
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Class that represents the shooter turret on the robot.
