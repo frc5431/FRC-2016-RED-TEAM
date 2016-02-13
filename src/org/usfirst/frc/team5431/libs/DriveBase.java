@@ -86,7 +86,10 @@ public class DriveBase {
 		//} else
 			drive.tankDrive(-right, -left);
 	}
-
+	
+	public double exp(double Speed) {
+		return Math.pow(Speed, 3) + (0.3 * Speed); 
+	}
 	/**
 	 * Checks input and drives based on an {@linkplain OI OI}
 	 * 

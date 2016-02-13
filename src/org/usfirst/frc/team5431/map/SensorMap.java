@@ -23,6 +23,7 @@ public class SensorMap {
 				FLY_WHEEL_RIGHT_COUNTER ,
 				FLY_WHEEL_LEFT_COUNTER ,
 				INTAKE_LIMIT;
+				//RIGHT_INTAKE_LIMIT;
 	
 	
 	
@@ -41,7 +42,7 @@ public class SensorMap {
 			REAR_LEFT_ENCODER_2=7;
 			FLY_WHEEL_RIGHT_COUNTER=8;
 			FLY_WHEEL_LEFT_COUNTER=10;
-			INTAKE_LIMIT=9;
+			INTAKE_LIMIT=9; 
 			break;
 		case BLUE:
 			FRONT_RIGHT_ENCODER_1=0;

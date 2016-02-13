@@ -24,6 +24,7 @@ public class Intake {
 	private boolean running = true;
 	private boolean limitState = false;
 	private static DigitalInput boulderLimit;
+	private static DigitalInput rightLimit;
 	private int pastbutton = 0;
 	private double speed = 0.7, motorspeed = 0;
 
@@ -46,6 +47,7 @@ public class Intake {
 		this.top.enableBrakeMode(true);
 		
 		boulderLimit = new DigitalInput(SensorMap.INTAKE_LIMIT);
+		//rightLimit = new DigitalInput(8);
 	}
 
 	/**
@@ -98,7 +100,8 @@ public class Intake {
 	 */
 	public void checkInput(OI map) {
 		//this is the code for the toggle
-		limitState = !boulderLimit.get(); //Reverses boulderLimit
+		limitState = (!boulderLimit.get()); //|| !rightLimit.get()); //Reverses boulderLimit
+		
 		
 		if(limitState && !map.isIntaking()) {
 			setMotorSpeed(0);

@@ -139,15 +139,16 @@ public class Robot extends IterativeRobot {
 	 */
 	public void teleopInit() {
 		runOnce = true;
-		ledTime = Timer.getFPGATimestamp();
-		led.LEDFromColor("r");
+		ledTime = 0;
+		led.LEDFromColor("w");
 	}
 
 	/**
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
-		
+		ledTime += Timer.getFPGATimestamp() - ledTime;
+		SmartDashboard.putNumber("Time On", ledTime);
 		if (launch!=LaunchType.BLUE) {
 			intake.checkInput(oi);
 			turret.checkInput(oi);
