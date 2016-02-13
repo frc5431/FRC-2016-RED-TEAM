@@ -4,6 +4,7 @@ package org.usfirst.frc.team5431.robot;
 import org.usfirst.frc.team5431.libs.DriveBase;
 import org.usfirst.frc.team5431.libs.EncoderBase;
 import org.usfirst.frc.team5431.libs.Intake;
+import org.usfirst.frc.team5431.libs.LED;
 import org.usfirst.frc.team5431.libs.PneumaticBase;
 import org.usfirst.frc.team5431.libs.TurretBase;
 import org.usfirst.frc.team5431.libs.Vision;
@@ -15,7 +16,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+ 
 /**
  * This is the code for red team of Team 5431(There are two robots building and
  * red is awesome.) Look under the libs package to see where all the main
@@ -42,11 +43,13 @@ public class Robot extends IterativeRobot {
 	private DriveBase drive;
 	private Intake intake;
 	private OI oi;
+	private LED led;
 	private Vision vision;
 	private PneumaticBase pneumatic;
-	public static DigitalInput boulderLimit;
+	//public static DigitalInput boulderLimit;
 	private EncoderBase encoder;
 	private boolean runOnce = false; // Don't mess with please
+	private double ledTime;
 
 	/**
 	 * Holder array whose value is changed by other threads.
@@ -66,12 +69,12 @@ public class Robot extends IterativeRobot {
 	 */
 	public void robotInit() {
 		runOnce = true;
-
+		
 		turret = new TurretBase();
 		intake = new Intake();
 		drive = new DriveBase();
 		oi = new OI(); // Joystick mapping
-		boulderLimit = new DigitalInput(SensorMap.INTAKE_LIMIT);
+		//boulderLimit = new DigitalInput(SensorMap.INTAKE_LIMIT);
 		encoder = new EncoderBase();
 		// pneumatic = new PneumaticBase();
 		vision = new Vision();
@@ -89,6 +92,7 @@ public class Robot extends IterativeRobot {
 
 		// Start vision thread
 		//new VisionThread().start();
+		led = new LED();
 	}
 
 	/**
@@ -114,7 +118,7 @@ public class Robot extends IterativeRobot {
 	 * based on the value of {@link #autoSelected}.
 	 */
 	public void autonomousPeriodic() {
-		vision.updateVals();
+		//vision.updateVals();
 
 		switch (currentAuto) {
 		case AutoShoot:
@@ -135,12 +139,15 @@ public class Robot extends IterativeRobot {
 	 */
 	public void teleopInit() {
 		runOnce = true;
+		ledTime = Timer.getFPGATimestamp();
+		led.LEDFromColor("r");
 	}
 
 	/**
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
+		
 		if (launch!=LaunchType.BLUE) {
 			intake.checkInput(oi);
 			turret.checkInput(oi);
@@ -216,7 +223,7 @@ class VisionThread extends Thread {
 			while (true) {
 				vision.updateVals();
 				Robot.autoAimVals = vision.updateSmartDash(onTarget, offTarget);
-				Timer.delay(0.01);
+				Thread.sleep(100);
 			}
 		} catch (Throwable e) {
 			e.printStackTrace();

@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5431.libs;
 
 import org.usfirst.frc.team5431.map.OI;
+import org.usfirst.frc.team5431.map.SensorMap;
 import org.usfirst.frc.team5431.robot.Robot;
 import org.usfirst.frc.team5431.map.MotorMap;
 
@@ -21,6 +22,7 @@ public class Intake {
 	private final CANTalon top;
 	//true because it is inverted at the start. it won't actually start running
 	private boolean running = true;
+	private boolean limitState = false;
 	private static DigitalInput boulderLimit;
 	private int pastbutton = 0;
 	private double speed = 0.7, motorspeed = 0;
@@ -43,7 +45,7 @@ public class Intake {
 		
 		this.top.enableBrakeMode(true);
 		
-		boulderLimit = Robot.boulderLimit;
+		boulderLimit = new DigitalInput(SensorMap.INTAKE_LIMIT);
 	}
 
 	/**
@@ -96,21 +98,26 @@ public class Intake {
 	 */
 	public void checkInput(OI map) {
 		//this is the code for the toggle
-
+		limitState = !boulderLimit.get(); //Reverses boulderLimit
+		
+		if(limitState && !map.isIntaking()) {
+			setMotorSpeed(0);
+		} else if(limitState && map.isIntaking()) {
+			setMotorSpeed(speed);
+		}
+		
 		if ((map.isIntaking() ? 0 : 1) > pastbutton) {
 			if (running) {
 				setMotorSpeed(0);
 			} else {
 				setMotorSpeed(speed);
 			}
-			intake();
-		}
-		if(map.isIntakingBackwards()){
-			setMotorSpeed(-speed);
 		}
 		pastbutton = map.isIntaking() ? 0 : 1;
-		
-		
+		if(map.isIntakingBackwards() && !running){
+			setMotorSpeed(-speed);
+		}
+		intake();
 		
 		//toggle gun
 //		if ((map.isIntaking() ? 0 : 1) > pastbutton) {
@@ -155,4 +162,13 @@ public class Intake {
 		return speed;
 	}
 
+}
+
+
+class GetLimit extends Thread {
+	
+	@Override
+	public void run() {
+		//Intake.
+	}
 }

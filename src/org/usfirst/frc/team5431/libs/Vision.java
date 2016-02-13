@@ -124,8 +124,9 @@ public class Vision {
 
 	private static NetworkTable grip;
 	private static Maths math;
-	private static LED led;
+	//private static LED led;
 	private final double[] defaults = {0};
+	private int count = 0;
 	
 	//Holders for updates
 	/**
@@ -144,7 +145,7 @@ public class Vision {
 	public Vision() {
 		grip = NetworkTable.getTable("GRIP/vision");
 		math = new Maths();
-		led = new LED();
+		//led = new LED();
 	}
 	
 	/**
@@ -180,6 +181,10 @@ public class Vision {
 	 * */
 	public double[] updateSmartDash(double readyVal, double offVal) {
 		
+		SmartDashboard.putNumber("UPDATE VALUE", count);
+		
+		count += 1;
+		
 		double[] toReturn = {0};
 		
 		int toShoot = math.chooseHole(areas, distances, holeSolids, fromCenters); //Chooses an object to shoot at(Method below)
@@ -203,7 +208,7 @@ public class Vision {
 			if((forback == 0) && (lefight == 0)) {
 				SmartDashboard.putString("FIRE", "YES FIRE!");
 				SmartDashboard.putString("PULL", "YES FIRE!");	
-				led.LEDFromColor("green");
+				//led.LEDFromColor("green");
 				toReturn[0] = readyVal;
 				toReturn[1] = 0;
 				toReturn[2] = 0;
@@ -212,17 +217,17 @@ public class Vision {
 				String firing = "";
 				if (forback == 1) {
 					pulling = "Drive Back!";
-					led.LEDFromColor("blue");
+					//led.LEDFromColor("blue");
 				}else if(forback == 2) {
 					pulling = "Drive Forward!";
-					led.LEDFromColor("cyan");
+					//led.LEDFromColor("cyan");
 				}
 				if(lefight == 1) {
 					firing = "Turn Left!";
-					led.LEDFromColor("yellow");
+					//led.LEDFromColor("yellow");
 				} else if(lefight == 2) {
 					firing = "Turn Right!";
-					led.LEDFromColor("purple");
+					//led.LEDFromColor("purple");
 				}
 				SmartDashboard.putString("PULL", pulling);
 				SmartDashboard.putString("FIRE", firing);
@@ -235,7 +240,7 @@ public class Vision {
 			}
 		} else {
 			SmartDashboard.putString("FIRE", "HOLE NOT FOUND!");
-			led.LEDFromColor("red");
+			//led.LEDFromColor("red");
 			toReturn[0] = offVal;
 			toReturn[1] = 0;
 			toReturn[2] = 0;

@@ -75,14 +75,14 @@ public final class MotorMap {
 		default:
 		case RED:
 		case MAYOR:
-			REAR_LEFT = 4;
-			REAR_RIGHT = 3;
+			REAR_LEFT = 3;
+			REAR_RIGHT = 5;
 			FRONT_LEFT = 2;
-			FRONT_RIGHT = 6;
+			FRONT_RIGHT = 4;
 			UNUSED = 8;
-			INTAKE = 5;
+			INTAKE = 9;
 			RIGHT_FLY = 7;
-			LEFT_FLY = 9;
+			LEFT_FLY = 6;
 			break;
 		case BLUE:
 			REAR_LEFT = 9;

@@ -30,7 +30,8 @@ public class TurretBase {
 	//true because it is inverted at the start. it won't actually start running
 	private boolean running = true;
 	private int pastbutton = 0;
-	private double speed = 0.7, motorspeed = 0;
+	private double speed = 0.1, motorspeed = 0;
+	public static volatile double toSpeed = 0.5;
 
 	/**
 	 * Default constructor for {@code TurretBase}. Binds the
@@ -48,6 +49,9 @@ public class TurretBase {
 
 		this.Left.clearStickyFaults();
 		this.Right.clearStickyFaults();
+		
+		SmartDashboard.putNumber("SET MOTOR", 0.0);
+		new updateThread().start();
 
 	}
 
@@ -105,7 +109,7 @@ public class TurretBase {
 			if (running) {
 				setMotorSpeed(0);
 			} else {
-				setMotorSpeed(speed);
+				setMotorSpeed(toSpeed);
 			}
 			shoot();
 		}
@@ -135,5 +139,20 @@ public class TurretBase {
 	 */
 	public double getSpeed() {
 		return speed;
+	}
+}
+
+class updateThread extends Thread {
+	
+	public void run() {
+		while(true) {
+			TurretBase.toSpeed = SmartDashboard.getNumber("SET MOTOR", 0.0);
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }

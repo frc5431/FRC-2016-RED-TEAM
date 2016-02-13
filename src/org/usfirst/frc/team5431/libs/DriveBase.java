@@ -45,15 +45,17 @@ public class DriveBase {
 		this.frontleft.enable();
 		this.rearright.enable();
 		this.frontright.enable();
-		if (Robot.launch==Robot.LaunchType.BLUE) {
+		
+		/*if (Robot.launch==Robot.LaunchType.BLUE) {
 			frontright.setInverted(true);
 			frontleft.setInverted(true);
 			rearleft.setInverted(true);
-		}
-		//rearright.setInverted(true);
-		//frontright.setInverted(true);
-
-
+		}*/
+		rearright.setInverted(true);
+		frontright.setInverted(true);
+		frontleft.setInverted(true);
+		rearleft.setInverted(true);
+			
 		this.rearleft.clearStickyFaults();
 		this.frontleft.clearStickyFaults();
 		this.rearright.clearStickyFaults();
@@ -79,10 +81,10 @@ public class DriveBase {
 	 *            center, and 1 is the highest.
 	 */
 	public void drive(double left, double right) {
-		if (Robot.launch==Robot.LaunchType.BLUE) {
-			drive.tankDrive(left * 0.7, right * 0.7);
-		} else
-			drive.tankDrive(-left, -right);
+		//if (Robot.launch==Robot.LaunchType.BLUE) {
+			//drive.tankDrive(left * 0.7, right * 0.7);
+		//} else
+			drive.tankDrive(-right, -left);
 	}
 
 	/**
