@@ -1,9 +1,11 @@
 package org.usfirst.frc.team5431.libs;
 
 import org.usfirst.frc.team5431.map.SolonoidMap;
-
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.I2C;
 
 /**
  * Class which handles the LED strip that goes around the robot.
@@ -14,24 +16,70 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class LED {
 	private Solenoid r,g,b;
+	private I2C serial;
 	
 	/**
 	 * Default constructor which maps the {@link Solenoid solenoids} to their respective ID.
 	 */
 	public LED() {
-	    r = new Solenoid(SolonoidMap.LED_RED);
-	    g = new Solenoid(SolonoidMap.LED_GREEN);
-	    b = new Solenoid(SolonoidMap.LED_BLUE);
+	    //r = new Solenoid(SolonoidMap.LED_RED);
+	    //g = new Solenoid(SolonoidMap.LED_GREEN);
+	    //b = new Solenoid(SolonoidMap.LED_BLUE);
+	    
+	    serial = new I2C(I2C.Port.kMXP, 0);
 	}
 	
 	/**
 	 * Resets all of the LED lights, turning them all off.
 	 */
-	private void reset() {
+	public void reset() {
 		// Turn all LEDs off before turning them on again
-		r.set(false);
-		g.set(false);
-		b.set(false);
+		//r.set(false);
+		//g.set(false);
+		//b.set(false);
+	    byte[] o = "OKKKK".getBytes();
+	    byte[] t = {};
+	    serial.transaction(o, o.length, t, 1);
+	}
+	
+	public boolean parseSend(String mode, int first, int second, int third) {
+		return this.parseSend(mode,  "", first, second, third);
+	}
+	
+	private boolean parseSend(String mode, String config, int first, int second, int third) {
+		
+		StringBuilder toSend = new StringBuilder();
+		
+		toSend.append("<<<::MODE::");
+		toSend.append(mode);
+		toSend.append("::CONFIG::");
+		toSend.append(config);
+		toSend.append("::R::");
+		toSend.append(first);
+		toSend.append("::G::");
+		toSend.append(second);
+		toSend.append("::B::");
+		toSend.append(third);
+		toSend.append(">>>");
+		
+		boolean gb = false;
+		
+		try {
+			gb = (this.SendI2C(toSend.toString()) == "G");
+		} catch(Throwable problem) {
+			problem.printStackTrace();
+		}
+		
+		return gb;
+	}
+	
+	public String SendI2C(String toSend) {
+		byte[] toSendByte = String.valueOf(toSend + "$").getBytes();
+		byte[] toRecv = {};
+		
+		serial.transaction(toSendByte, toSendByte.length, toRecv, 1);
+		
+		return toRecv.toString();
 	}
 	
 	/**
@@ -153,5 +201,17 @@ public class LED {
 		this.LEDFromColor("w");
 		Timer.delay(2);
 		reset();
+	}
+	
+	public void wholeStripRGB(int red, int green, int blue) {
+		SmartDashboard.putBoolean("LED_FAILURE:", this.parseSend("WHOLE", red, green, blue));
+	}
+	
+	public void turnLeft(int red, int green, int blue, int speed) {
+		this.parseSend("LEFT", String.valueOf(speed), red, green, blue);
+	}
+	
+	public void turnRight(int red, int green, int blue, int speed) {
+		this.parseSend("RIGHT", String.valueOf(speed), red, green, blue);
 	}
 }

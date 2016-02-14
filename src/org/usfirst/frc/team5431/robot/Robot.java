@@ -140,7 +140,15 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		runOnce = true;
 		ledTime = 0;
-		led.LEDFromColor("w");
+		//led.reset();
+		//led.wholeStripRGB(255, 200, 150);
+		//led.parseSend("WHOLE", 23, 23, 23);
+		//led.SendI2C("DUMB");
+		//Timer.delay(2);
+		//led.turnLeft(255, 65, 0, 60);
+		//Timer.delay(2);
+		//led.turnRight(255, 65, 0, 60);
+		//Timer.delay(2);
 	}
 
 	/**
@@ -154,6 +162,8 @@ public class Robot extends IterativeRobot {
 			turret.checkInput(oi);
 		}
 		drive.checkInput(oi);
+		//Timer.delay(1);
+		//led.SendI2C("VAL");
 		// pneumatic.checkInput(oi);
 	}
 
