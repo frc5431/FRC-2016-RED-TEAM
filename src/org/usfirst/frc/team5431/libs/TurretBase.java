@@ -50,7 +50,7 @@ public class TurretBase {
 		this.Left.clearStickyFaults();
 		this.Right.clearStickyFaults();
 		
-		SmartDashboard.putNumber("SET MOTOR", 0.0);
+		SmartDashboard.putNumber("TURRET SPEED", MotorMap.DEFAULT_FLYWHEEL_SPEED);
 		new updateThread().start();
 
 	}
@@ -146,7 +146,7 @@ class updateThread extends Thread {
 	
 	public void run() {
 		while(true) {
-			TurretBase.toSpeed = SmartDashboard.getNumber("SET MOTOR", 0.0);
+			TurretBase.toSpeed = SmartDashboard.getNumber("TURRET SPEED", MotorMap.DEFAULT_FLYWHEEL_SPEED);
 			try {
 				Thread.sleep(5000);
 			} catch (InterruptedException e) {

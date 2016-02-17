@@ -51,10 +51,7 @@ public class DriveBase {
 			frontleft.setInverted(true);
 			rearleft.setInverted(true);
 		}*/
-		rearright.setInverted(true);
-		frontright.setInverted(true);
-		frontleft.setInverted(true);
-		rearleft.setInverted(true);
+
 			
 		this.rearleft.clearStickyFaults();
 		this.frontleft.clearStickyFaults();
@@ -84,7 +81,7 @@ public class DriveBase {
 		//if (Robot.launch==Robot.LaunchType.BLUE) {
 			//drive.tankDrive(left * 0.7, right * 0.7);
 		//} else
-			drive.tankDrive(-right, -left);
+			drive.tankDrive(right, left);
 	}
 	
 	public double exp(double Speed) {
