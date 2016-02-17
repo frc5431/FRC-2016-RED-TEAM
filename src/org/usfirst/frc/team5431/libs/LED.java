@@ -48,8 +48,10 @@ public class LED {
 	}
 	
 	public void SendI2c(String toSend) {
-		byte[] toSendByte = toSend.getBytes(Charset.forName("UTF-8"));
-		this.i2c.writeBulk(toSendByte);
+		try {
+			byte[] toSendByte = toSend.getBytes(Charset.forName("UTF-8"));
+			this.i2c.writeBulk(toSendByte);
+		} catch(Throwable ignored){}
 	}
 	
 	
