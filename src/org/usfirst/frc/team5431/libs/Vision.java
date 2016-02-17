@@ -3,6 +3,8 @@
  */
 package org.usfirst.frc.team5431.libs;
 
+import org.usfirst.frc.team5431.robot.Robot;
+
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -40,6 +42,10 @@ class Maths {
 	 * */
 	public double DistanceCalc(double pixelsFromTop) {
 		return (33.8569 * Math.pow(1.007, pixelsFromTop)); //Make sure you pre test these values
+	}
+	
+	public double SpeedCalc(double distanceFromTower) {
+		return distanceFromTower;
 	}
 	
 	/**
@@ -165,21 +171,22 @@ public class Vision {
 	/**
 	 * Updates the {@linkplain SmartDashboard} with the new values.
 	 * 
-	 * @see #updateVals()
+	 * @return An array of values, which says what speed to set the motors of
+	 * @see #updateSmartDash(double)
 	 * */
-	public void updateSmartDash() {
-		this.updateSmartDash(0, 0);
+	
+	public double[] updateSmartDash() {
+		return this.updateSmartDash(0.0);
 	}
-
+	
 	/**
 	 * Updates the {@linkplain SmartDashboard} with the new values.
 	 * 
-	 * @param readyVal Value to set if it is ready to shoot
 	 * @param offVal Value to set if it is off
 	 * @return An array of values, where each value says if it is ready to shoot. A 1 size array of 0 means it failed or not ready to shoot.
 	 * @see #updateVals()
 	 * */
-	public double[] updateSmartDash(double readyVal, double offVal) {
+	public double[] updateSmartDash(double offVal) {
 		
 		SmartDashboard.putNumber("UPDATE VALUE", count);
 		
@@ -205,10 +212,12 @@ public class Vision {
 			int lefight = (math.withIn(tempCenter, Maths.leftTrig, Maths.rightTrig)) ? 0 :
 					(tempCenter < Maths.leftTrig) ? 1 : 2; //Amount to turn the turrent
 			
+			double readyVal = math.SpeedCalc(distances[toShoot]);
+			
 			if((forback == 0) && (lefight == 0)) {
 				SmartDashboard.putString("FIRE", "YES FIRE!");
 				SmartDashboard.putString("PULL", "YES FIRE!");	
-				//led.LEDFromColor("green");
+				Robot.led.wholeStripRGB(255, 0, 0);
 				toReturn[0] = readyVal;
 				toReturn[1] = 0;
 				toReturn[2] = 0;
@@ -217,30 +226,28 @@ public class Vision {
 				String firing = "";
 				if (forback == 1) {
 					pulling = "Drive Back!";
-					//led.LEDFromColor("blue");
+					Robot.led.backwards(0, 0, 255, 60);
 				}else if(forback == 2) {
 					pulling = "Drive Forward!";
-					//led.LEDFromColor("cyan");
+					Robot.led.forwards(0, 255, 255, 60);
 				}
 				if(lefight == 1) {
 					firing = "Turn Left!";
-					//led.LEDFromColor("yellow");
+					Robot.led.turnLeft(255, 135, 0, 65);
 				} else if(lefight == 2) {
 					firing = "Turn Right!";
-					//led.LEDFromColor("purple");
+					Robot.led.turnRight(255, 135, 0, 65);
 				}
 				SmartDashboard.putString("PULL", pulling);
 				SmartDashboard.putString("FIRE", firing);
 				
-				//SmartDashboard.putString("PULL", ((forback == 0) ? "" : (forback == 1) ?  : "Drive Forward!")); //Display to the dashboard
-				//SmartDashboard.putString("FIRE", ((lefight == 0) ? "" : (lefight == 1) ? "Turn Left!" : "Turn Right!")); //Display to the dashboard
 				toReturn[0] = ((readyVal+offVal)/2) - 0.05;
 				toReturn[1] = lefight;
 				toReturn[2] = forback;
 			}
 		} else {
 			SmartDashboard.putString("FIRE", "HOLE NOT FOUND!");
-			//led.LEDFromColor("red");
+			Robot.led.wholeStripRGB(120, 140, 120);
 			toReturn[0] = offVal;
 			toReturn[1] = 0;
 			toReturn[2] = 0;
