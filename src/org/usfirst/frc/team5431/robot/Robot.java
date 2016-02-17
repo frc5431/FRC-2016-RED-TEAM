@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
- 
+
 /**
  * This is the code for red team of Team 5431(There are two robots building and
  * red is awesome.) Look under the libs package to see where all the main
@@ -28,8 +28,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	public static LaunchType launch = LaunchType.RED;
-	public static enum LaunchType{
-		RED,BLUE,MAYOR()
+
+	public static enum LaunchType {
+		RED, BLUE, MAYOR, ID;
 	}
 
 	// Better than strings
@@ -46,7 +47,7 @@ public class Robot extends IterativeRobot {
 	private LED led;
 	private Vision vision;
 	private PneumaticBase pneumatic;
-	//public static DigitalInput boulderLimit;
+	// public static DigitalInput boulderLimit;
 	private EncoderBase encoder;
 	private boolean runOnce = false; // Don't mess with please
 	private double ledTime;
@@ -68,31 +69,33 @@ public class Robot extends IterativeRobot {
 	 * Method called once in a {@linkplain Robot robot's} lifetime.
 	 */
 	public void robotInit() {
-		runOnce = true;
-		
-		turret = new TurretBase();
-		intake = new Intake();
-		drive = new DriveBase();
-		oi = new OI(); // Joystick mapping
-		//boulderLimit = new DigitalInput(SensorMap.INTAKE_LIMIT);
-		encoder = new EncoderBase();
-		// pneumatic = new PneumaticBase();
-		vision = new Vision();
+		if (launch != LaunchType.ID) {
+			runOnce = true;
 
-		intake.setSpeed(1);
-		turret.setSpeed(0.73);
+			turret = new TurretBase();
+			intake = new Intake();
+			drive = new DriveBase();
+			oi = new OI(); // Joystick mapping
+			// boulderLimit = new DigitalInput(SensorMap.INTAKE_LIMIT);
+			encoder = new EncoderBase();
+			// pneumatic = new PneumaticBase();
+			vision = new Vision();
 
-		auton_select = new SendableChooser();
-		auton_select.addDefault("AutoShoot Lowbar", AutoTask.AutoShoot);
-		auton_select.addObject("StandStill", AutoTask.StandStill);
+			intake.setSpeed(1);
+			turret.setSpeed(0.73);
 
-		// pneumatic.startCompressor();
+			auton_select = new SendableChooser();
+			auton_select.addDefault("AutoShoot Lowbar", AutoTask.AutoShoot);
+			auton_select.addObject("StandStill", AutoTask.StandStill);
 
-		SmartDashboard.putData("Auto choices", auton_select);
+			// pneumatic.startCompressor();
 
-		// Start vision thread
-		//new VisionThread().start();
-		led = new LED();
+			SmartDashboard.putData("Auto choices", auton_select);
+
+			// Start vision thread
+			// new VisionThread().start();
+			led = new LED();
+		}
 	}
 
 	/**
@@ -118,7 +121,7 @@ public class Robot extends IterativeRobot {
 	 * based on the value of {@link #autoSelected}.
 	 */
 	public void autonomousPeriodic() {
-		//vision.updateVals();
+		// vision.updateVals();
 
 		switch (currentAuto) {
 		case AutoShoot:
@@ -140,30 +143,32 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		runOnce = true;
 		ledTime = 0;
-		//led.reset();
-		//led.wholeStripRGB(255, 200, 150);
-		//led.parseSend("WHOLE", 23, 23, 23);
-		//led.SendI2C("DUMB");
-		//Timer.delay(2);
-		//led.turnLeft(255, 65, 0, 60);
-		//Timer.delay(2);
-		//led.turnRight(255, 65, 0, 60);
-		//Timer.delay(2);
+		// led.reset();
+		// led.wholeStripRGB(255, 200, 150);
+		// led.parseSend("WHOLE", 23, 23, 23);
+		// led.SendI2C("DUMB");
+		// Timer.delay(2);
+		// led.turnLeft(255, 65, 0, 60);
+		// Timer.delay(2);
+		// led.turnRight(255, 65, 0, 60);
+		// Timer.delay(2);
 	}
 
 	/**
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
-		ledTime += Timer.getFPGATimestamp() - ledTime;
-		SmartDashboard.putNumber("Time On", ledTime);
-		if (launch!=LaunchType.BLUE) {
-			intake.checkInput(oi);
-			turret.checkInput(oi);
+		if (launch != LaunchType.ID) {
+			ledTime += Timer.getFPGATimestamp() - ledTime;
+			SmartDashboard.putNumber("Time On", ledTime);
+			if (launch != LaunchType.BLUE) {
+				intake.checkInput(oi);
+				turret.checkInput(oi);
+			}
+			drive.checkInput(oi);
 		}
-		drive.checkInput(oi);
-		//Timer.delay(1);
-		//led.SendI2C("VAL");
+		// Timer.delay(1);
+		// led.SendI2C("VAL");
 		// pneumatic.checkInput(oi);
 	}
 

@@ -12,6 +12,9 @@ public final class MotorMap {
 	// to prevent instantiation
 	private MotorMap() {
 	}
+	
+	public static final double DEFAULT_FLYWHEEL_SPEED=0.4;
+	public static final double DEFAULT_INTAKE_SPEED=0.7;
 
 	/**
 	 * Channel ID for the left flywheel in the shooter mechanism, which is
@@ -75,14 +78,14 @@ public final class MotorMap {
 		default:
 		case RED:
 		case MAYOR:
-			REAR_LEFT = 3;
-			REAR_RIGHT = 5;
-			FRONT_LEFT = 2;
-			FRONT_RIGHT = 4;
-			UNUSED = 8;
-			INTAKE = 9;
-			RIGHT_FLY = 7;
-			LEFT_FLY = 6;
+			REAR_LEFT = 6;
+			REAR_RIGHT = 9;
+			FRONT_LEFT = 8;
+			FRONT_RIGHT = 7;
+			UNUSED = 4;
+			INTAKE = 3;
+			RIGHT_FLY = 2;
+			LEFT_FLY = 5;
 			break;
 		case BLUE:
 			REAR_LEFT = 9;
