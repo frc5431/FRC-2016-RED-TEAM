@@ -76,8 +76,8 @@ public class Robot extends IterativeRobot {
 		oi = new OI(); // Joystick mapping
 		led = new LED(); 
 
-		intake.setSpeed(1);
-		turret.setSpeed(0.73);
+		//intake.setSpeed(1);
+		//turret.setSpeed(0.73);
 
 		auton_select = new SendableChooser();
 		auton_select.addDefault("AutoShoot Lowbar", AutoTask.AutoShoot);
@@ -88,7 +88,8 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Auto choices", auton_select);
 
 		// Start vision thread
-		new VisionThread().start();
+		//new VisionThread().start();
+		new EncoderThread().start();
 		Timer.delay(1);
 		ledTime = 0;
 	}
@@ -99,9 +100,9 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		currentAuto = (AutoTask) auton_select.getSelected();
 		SmartDashboard.putString("Auto Selected: ", currentAuto.toString());
-		//led.reset();
+		led.reset();
 		//SmartDashboard.putString("SERIAL", led.SendSerial("READY"));
-		//led.demo();
+		led.demo();
 	}
 
 	/** 
@@ -160,6 +161,7 @@ public class Robot extends IterativeRobot {
 			turret.checkInput(oi);
 		}
 		drive.checkInput(oi);
+		
 	}
 
 	/**
@@ -168,6 +170,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void disabledPeriodic() {
 		runOnce = true;
+		Robot.encoder.resetDrive();
 	}
 
 	/**
@@ -221,7 +224,7 @@ class EncoderThread extends Thread {
 	private EncoderBase encoder;
 	
 	public EncoderThread() {
-		encoder = new EncoderBase();
+		encoder = Robot.encoder;
 	}
 	
 	@Override
@@ -231,6 +234,12 @@ class EncoderThread extends Thread {
 			Robot.encoderVals[1] = encoder.rightFlyRPM();
 			Robot.encoderVals[2] = encoder.LeftDistance();
 			Robot.encoderVals[3] = encoder.RightDistance();
+			
+			SmartDashboard.putNumber("LEFT-WHEEL", Robot.encoderVals[2]);
+			SmartDashboard.putNumber("RIGHT-WHEEL", Robot.encoderVals[3]);
+			SmartDashboard.putNumber("FLY-LEFT-WHEEL", Robot.encoderVals[0]);
+			SmartDashboard.putNumber("FLY-RIGHT-WHEEL", Robot.encoderVals[1]);
+			
 			try {Thread.sleep(10);} catch (InterruptedException ignored) {}
 		}
 	}

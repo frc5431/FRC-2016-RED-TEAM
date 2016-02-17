@@ -18,6 +18,8 @@ public class DriveBase {
 	private CANTalon rearleft, frontleft, rearright, frontright;
 
 	private RobotDrive drive;
+	
+	private static int robotWidth = 23 + 1/8;
 
 	/**
 	 * Default constructor
@@ -85,7 +87,7 @@ public class DriveBase {
 	/**
 	 * Automagically drives straight
 	 */
-	public void auto_driveStraight(double distance, double speed, double curve) {
+	public void auto_driveStraight(double distance, double speed, double curve) { //Why do you have curve? Liave, you need to document!
 		Robot.encoder.resetDrive();
 
 		double left = 0;
@@ -103,13 +105,54 @@ public class DriveBase {
 		}
 		drive.drive(0, 0);
 	}
-
+	
+	/**
+	 * Encoder-based turning with input in degrees and speed.
+	 * @param degrees 
+	 * 					From 0 - 180 for left and 0 to -180 for right
+	 * @param speed
+	 * 					Speed that robot turns, from -1 to 1.
+	 * @param curve
+	 * 					How much to speed up a side if one side is going a pulse faster.
+	 * 					Should be extremely small (adds to motor value for a side).
+	 */
+	public void auto_driveTurn(double degrees, double speed, double curve){
+		Robot.encoder.resetDrive();
+		double left = 0;
+		double right = 0;
+		double leftDistance = 0;
+		double rightDistance = 0;
+						 //We aren't doing straight in this function are we? How am I going to find distance from just degrees (which is 0). 
+		if(degrees != 0){ //This is to make sure that even if build team programs, they won't kill themselves immediately.
+			if(degrees < 0){
+				leftDistance = (1/2 * degrees) * robotWidth / 360;   //degrees negates left for us (why type more?)
+				rightDistance = (1/2 * -degrees) * robotWidth / 360; //Negative because right will need to be positive
+			}
+			else{
+				leftDistance = (1/2 * -degrees) * robotWidth / 360;	//Negating because left needs to go backward.
+				rightDistance = (1/2 * degrees) * robotWidth / 360;
+			}
+			//Lets just do copy and paste here, shall we?
+			while (((left = Robot.encoder.LeftDistance()) < leftDistance)
+					&& ((right = Robot.encoder.RightDistance()) < rightDistance)) {
+				if (left < right - 0.1) {
+					drive.drive(speed + curve, speed - curve);
+				} else if (left > right + 0.1) {
+					drive.drive(speed - curve, speed + curve);
+				} else {
+					drive.drive(speed, speed);
+				}
+			}
+			drive.drive(0, 0);
+		}
+		//else I would return something (we need to make a list of error codes and not have any void functions . . .)
+	}
 	/*
 	 * Make the joystick inputs curved for a natural dead zone(No jumping) And
 	 * also allow smaller more precise movements
 	 */
 	private double exp(double Speed) {
-		return (0.46 * Math.pow(Speed, 3)) + (0.5 * Speed);
+		return Speed/1.5;//(0.46 * Math.pow(Speed, 3)) + (0.5 * Speed);
 	}
 
 	/**

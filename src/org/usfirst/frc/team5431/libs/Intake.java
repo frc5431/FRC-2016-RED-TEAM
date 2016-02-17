@@ -24,7 +24,6 @@ public class Intake {
 	private boolean running = true;
 	private boolean limitState = false;
 	private static DigitalInput boulderLimit;
-	private static DigitalInput rightLimit;
 	private int pastbutton = 0;
 	private double speed = 0.7, motorspeed = 0;
 
