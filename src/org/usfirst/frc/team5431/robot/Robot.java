@@ -5,13 +5,10 @@ import org.usfirst.frc.team5431.libs.DriveBase;
 import org.usfirst.frc.team5431.libs.EncoderBase;
 import org.usfirst.frc.team5431.libs.Intake;
 import org.usfirst.frc.team5431.libs.LED;
-import org.usfirst.frc.team5431.libs.PneumaticBase;
 import org.usfirst.frc.team5431.libs.TurretBase;
 import org.usfirst.frc.team5431.libs.Vision;
 import org.usfirst.frc.team5431.map.OI;
-import org.usfirst.frc.team5431.map.SensorMap;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -44,13 +41,9 @@ public class Robot extends IterativeRobot {
 	private Intake intake;
 	private OI oi;
 	private LED led;
-	private Vision vision;
-	private PneumaticBase pneumatic;
-	//public static DigitalInput boulderLimit;
-	private EncoderBase encoder;
 	private boolean runOnce = false; // Don't mess with please
 	private double ledTime;
-
+	
 	/**
 	 * Holder array whose value is changed by other threads.
 	 */
@@ -58,6 +51,11 @@ public class Robot extends IterativeRobot {
 																// other thread
 																// can see the
 																// vals
+	
+	
+	public static volatile EncoderBase encoder; //Encoder class to access other threads
+	
+	
 	/**
 	 * Holder value whose value is changed by other threads.
 	 */
@@ -70,14 +68,13 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		runOnce = true;
 		
+		encoder = new EncoderBase();
 		turret = new TurretBase();
 		intake = new Intake();
 		drive = new DriveBase();
 		oi = new OI(); // Joystick mapping
 		//boulderLimit = new DigitalInput(SensorMap.INTAKE_LIMIT);
-		encoder = new EncoderBase();
 		// pneumatic = new PneumaticBase();
-		vision = new Vision();
 
 		intake.setSpeed(1);
 		turret.setSpeed(0.73);
@@ -91,8 +88,10 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Auto choices", auton_select);
 
 		// Start vision thread
-		//new VisionThread().start();
-		led = new LED();
+		new VisionThread().start();
+		led = new LED(); 
+		Timer.delay(1);
+		ledTime = 0;
 	}
 
 	/**
@@ -101,9 +100,13 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		currentAuto = (AutoTask) auton_select.getSelected();
 		SmartDashboard.putString("Auto Selected: ", currentAuto.toString());
+		led.demo();
+		//led.reset();
+		//SmartDashboard.putString("SERIAL", led.SendSerial("READY"));
+		//led.demo();
 	}
 
-	/**
+	/** 
 	 * Autonomously drives under the low bar.
 	 */
 	public void lowbarMode() {
@@ -119,6 +122,9 @@ public class Robot extends IterativeRobot {
 	 */
 	public void autonomousPeriodic() {
 		//vision.updateVals();
+		SmartDashboard.putNumber("Run TIME", ledTime);
+		ledTime += 1;
+		Timer.delay(2);
 
 		switch (currentAuto) {
 		case AutoShoot:
@@ -140,15 +146,6 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		runOnce = true;
 		ledTime = 0;
-		//led.reset();
-		//led.wholeStripRGB(255, 200, 150);
-		//led.parseSend("WHOLE", 23, 23, 23);
-		//led.SendI2C("DUMB");
-		//Timer.delay(2);
-		//led.turnLeft(255, 65, 0, 60);
-		//Timer.delay(2);
-		//led.turnRight(255, 65, 0, 60);
-		//Timer.delay(2);
 	}
 
 	/**
@@ -200,8 +197,7 @@ public class Robot extends IterativeRobot {
 	 * @deprecated unused
 	 */
 	@Deprecated
-	public void testPeriodic() {
-	}
+	public void testPeriodic() {}
 }
 
 /**

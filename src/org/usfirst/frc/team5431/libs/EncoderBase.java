@@ -94,3 +94,13 @@ public class EncoderBase {
 	
 	
 }
+
+class EncoderThread extends Thread {
+	
+	@Override
+	public void run() {
+		
+	}
+}
+
+
