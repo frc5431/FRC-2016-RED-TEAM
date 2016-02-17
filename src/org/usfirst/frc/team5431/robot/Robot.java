@@ -40,7 +40,6 @@ public class Robot extends IterativeRobot {
 	private DriveBase drive;
 	private Intake intake;
 	private OI oi;
-	private LED led;
 	private boolean runOnce = false; // Don't mess with please
 	private double ledTime;
 	
@@ -52,15 +51,17 @@ public class Robot extends IterativeRobot {
 																// can see the
 																// vals
 	
+	public static volatile double[] encoderVals = {0, 0, 0, 0}; //L Fly, R Fly, Left, Right
+	
 	
 	public static volatile EncoderBase encoder; //Encoder class to access other threads
+	public static volatile LED led; //Multi-thread access variable
 	
 	
 	/**
 	 * Holder value whose value is changed by other threads.
 	 */
-	public static volatile double onTarget = 0.7, // Value to shoot at target
-			offTarget = 0.2; // Value to idle flyWheels
+	public static volatile double offTarget = 0.2; // Value to idle flyWheels
 
 	/**
 	 * Method called once in a {@linkplain Robot robot's} lifetime.
@@ -73,8 +74,7 @@ public class Robot extends IterativeRobot {
 		intake = new Intake();
 		drive = new DriveBase();
 		oi = new OI(); // Joystick mapping
-		//boulderLimit = new DigitalInput(SensorMap.INTAKE_LIMIT);
-		// pneumatic = new PneumaticBase();
+		led = new LED(); 
 
 		intake.setSpeed(1);
 		turret.setSpeed(0.73);
@@ -89,7 +89,6 @@ public class Robot extends IterativeRobot {
 
 		// Start vision thread
 		new VisionThread().start();
-		led = new LED(); 
 		Timer.delay(1);
 		ledTime = 0;
 	}
@@ -100,7 +99,6 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		currentAuto = (AutoTask) auton_select.getSelected();
 		SmartDashboard.putString("Auto Selected: ", currentAuto.toString());
-		led.demo();
 		//led.reset();
 		//SmartDashboard.putString("SERIAL", led.SendSerial("READY"));
 		//led.demo();
@@ -111,9 +109,12 @@ public class Robot extends IterativeRobot {
 	 */
 	public void lowbarMode() {
 		// Drive 15 feet
-		this.auto_driveStraight(156, 0.5, 0.05); // Distance (in), speed
-		// (0-1), curve(0-0.1)
+		drive.auto_driveStraight(156, 0.5, 0.05); // Distance (in), speed (0-1), curve(0-0.1)
 
+	}
+	
+	public void autoShoot() {
+		
 	}
 
 	/**
@@ -159,9 +160,6 @@ public class Robot extends IterativeRobot {
 			turret.checkInput(oi);
 		}
 		drive.checkInput(oi);
-		//Timer.delay(1);
-		//led.SendI2C("VAL");
-		// pneumatic.checkInput(oi);
 	}
 
 	/**
@@ -170,27 +168,6 @@ public class Robot extends IterativeRobot {
 	 */
 	public void disabledPeriodic() {
 		runOnce = true;
-	}
-
-	/**
-	 * Automagically drives straight
-	 */
-	private void auto_driveStraight(double distance, double speed, double curve) {
-		encoder.resetDrive();
-
-		double left = 0;
-		double right = 0;
-
-		while (((left = encoder.LeftDistance()) < distance) && ((right = encoder.RightDistance()) < distance)) {
-			if (left < right) {
-				drive.drive(speed + curve, speed - curve);
-			} else if (right > left) {
-				drive.drive(speed - curve, speed + curve);
-			} else {
-				drive.drive(speed, speed);
-			}
-		}
-		drive.drive(0, 0);
 	}
 
 	/**
@@ -206,7 +183,7 @@ public class Robot extends IterativeRobot {
 class VisionThread extends Thread {
 
 	private Vision vision;
-	private static double onTarget, offTarget;
+	private static double offTarget;
 
 	/**
 	 * Default constructor.
@@ -214,7 +191,6 @@ class VisionThread extends Thread {
 	public VisionThread() {
 		try {
 			vision = new Vision();
-			onTarget = Robot.onTarget;
 			offTarget = Robot.offTarget;
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -229,7 +205,7 @@ class VisionThread extends Thread {
 		try {
 			while (true) {
 				vision.updateVals();
-				Robot.autoAimVals = vision.updateSmartDash(onTarget, offTarget);
+				Robot.autoAimVals = vision.updateSmartDash(offTarget);
 				Thread.sleep(100);
 			}
 		} catch (Throwable e) {
@@ -238,4 +214,24 @@ class VisionThread extends Thread {
 
 	}
 
+}
+
+class EncoderThread extends Thread {
+	
+	private EncoderBase encoder;
+	
+	public EncoderThread() {
+		encoder = new EncoderBase();
+	}
+	
+	@Override
+	public void run() {
+		while(true) {
+			Robot.encoderVals[0] = encoder.leftFlyRPM();
+			Robot.encoderVals[1] = encoder.rightFlyRPM();
+			Robot.encoderVals[2] = encoder.LeftDistance();
+			Robot.encoderVals[3] = encoder.RightDistance();
+			try {Thread.sleep(10);} catch (InterruptedException ignored) {}
+		}
+	}
 }

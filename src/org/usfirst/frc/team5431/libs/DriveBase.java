@@ -87,8 +87,33 @@ public class DriveBase {
 			drive.tankDrive(-right, -left);
 	}
 	
-	public double exp(double Speed) {
-		return Math.pow(Speed, 3) + (0.3 * Speed); 
+	/**
+	 * Automagically drives straight
+	 */
+	public void auto_driveStraight(double distance, double speed, double curve) {
+		Robot.encoder.resetDrive();
+
+		double left = 0;
+		double right = 0;
+
+		while (((left = Robot.encoder.LeftDistance()) < distance) && ((right = Robot.encoder.RightDistance()) < distance)) {
+			if (left < right - 0.1) {
+				drive.drive(speed + curve, speed - curve);
+			} else if (left > right + 0.1) {
+				drive.drive(speed - curve, speed + curve);
+			} else {
+				drive.drive(speed, speed);
+			}
+		}
+		drive.drive(0, 0);
+	}
+	
+	/*
+	 * Make the joystick inputs curved for a natural dead zone(No jumping)
+	 * And also allow smaller more precise movements 
+	 */
+	private double exp(double Speed) {
+		return (0.46 * Math.pow(Speed, 3)) + (0.5 * Speed); 
 	}
 	/**
 	 * Checks input and drives based on an {@linkplain OI OI}
@@ -97,7 +122,7 @@ public class DriveBase {
 	 *            Current operator interface.
 	 */
 	public void checkInput(OI map) {
-		this.drive(map.getDriveLeftYAxis(), map.getDriveRightYAxis());
+		this.drive(exp(map.getDriveLeftYAxis()), exp(map.getDriveRightYAxis()));
 	}
 
 }
