@@ -51,8 +51,6 @@ public class DriveBase {
 			frontleft.setInverted(true);
 			rearleft.setInverted(true);
 		}*/
-
-			
 		this.rearleft.clearStickyFaults();
 		this.frontleft.clearStickyFaults();
 		this.rearright.clearStickyFaults();
