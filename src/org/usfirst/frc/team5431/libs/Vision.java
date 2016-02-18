@@ -41,7 +41,7 @@ class Maths {
 	 * @return The distance from the hole
 	 * */
 	public double DistanceCalc(double pixelsFromTop) {
-		return (33.8569 * Math.pow(1.007, pixelsFromTop)); //Make sure you pre test these values
+		return (47.0943) * Math.pow(1.0072, pixelsFromTop); //return (33.8569 * Math.pow(1.007, pixelsFromTop)); //Make sure you pre test these values
 	}
 	
 	public double SpeedCalc(double distanceFromTower) {
