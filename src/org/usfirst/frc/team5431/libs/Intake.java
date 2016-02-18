@@ -103,15 +103,19 @@ public class Intake {
 		
 		
 		if(limitState && !map.isIntaking()) {
+			Robot.table.putBoolean("intake", false);
 			setMotorSpeed(0);
 		} else if(limitState && map.isIntaking()) {
+			Robot.table.putBoolean("intake", true);
 			setMotorSpeed(speed);
 		}
 		
 		if ((map.isIntaking() ? 0 : 1) > pastbutton) {
 			if (running) {
+				Robot.table.putBoolean("intake", false);
 				setMotorSpeed(0);
 			} else {
+				Robot.table.putBoolean("intake", true);
 				setMotorSpeed(speed);
 			}
 		}

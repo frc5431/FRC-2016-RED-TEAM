@@ -107,8 +107,10 @@ public class TurretBase {
 	public void checkInput(OI map) {
 		if ((map.isShooting() ? 0 : 1) > pastbutton) {
 			if (running) {
+				Robot.table.putBoolean("intake", false);
 				setMotorSpeed(0);
 			} else {
+				Robot.table.putBoolean("turret", true);
 				setMotorSpeed(toSpeed);
 			}
 			shoot();

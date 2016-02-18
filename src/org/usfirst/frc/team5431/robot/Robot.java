@@ -193,6 +193,7 @@ public class Robot extends IterativeRobot {
 			intake.checkInput(oi);
 			turret.checkInput(oi);
 		}
+		table.putNumber("current turret speed", (encoder.rightFlyRPM()+encoder.leftFlyRPM())/2);
 		drive.checkInput(oi);
 		
 	}
