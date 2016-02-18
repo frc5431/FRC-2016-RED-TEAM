@@ -1,6 +1,7 @@
 
 package org.usfirst.frc.team5431.robot;
 
+import org.usfirst.frc.team5431.SmarterDashboard;
 import org.usfirst.frc.team5431.libs.DriveBase;
 import org.usfirst.frc.team5431.libs.EncoderBase;
 import org.usfirst.frc.team5431.libs.Intake;
@@ -153,6 +154,7 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
+		SmarterDashboard.updateConnectionStatus(true);
 		ledTime += Timer.getFPGATimestamp() - ledTime;
 		SmartDashboard.putNumber("Time On", ledTime);
 		if (launch!=LaunchType.BLUE) {
