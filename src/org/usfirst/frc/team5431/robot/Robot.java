@@ -12,6 +12,7 @@ import org.usfirst.frc.team5431.map.OI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  
@@ -43,6 +44,7 @@ public class Robot extends IterativeRobot {
 	private OI oi;
 	private boolean runOnce = false; // Don't mess with please
 	private double ledTime;
+	public static NetworkTable table;
 	
 	/**
 	 * Holder array whose value is changed by other threads.
@@ -94,6 +96,7 @@ public class Robot extends IterativeRobot {
 		new EncoderThread().start();
 		Timer.delay(1);
 		ledTime = 0;
+		table = NetworkTable.getTable("5431");
 	}
 
 	/**
@@ -184,6 +187,7 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
+		table.putBoolean("connection", true);
 		ledTime += Timer.getFPGATimestamp() - ledTime;
 		SmartDashboard.putNumber("Time On", ledTime);
 		if (launch!=LaunchType.BLUE) {
