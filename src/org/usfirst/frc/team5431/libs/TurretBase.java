@@ -146,9 +146,9 @@ class updateThread extends Thread {
 	
 	public void run() {
 		while(true) {
-			TurretBase.toSpeed = SmartDashboard.getNumber("TURRET SPEED", MotorMap.DEFAULT_FLYWHEEL_SPEED);
+			TurretBase.toSpeed = Robot.autoAimVals[0];//SmartDashboard.getNumber("TURRET SPEED", MotorMap.DEFAULT_FLYWHEEL_SPEED);
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

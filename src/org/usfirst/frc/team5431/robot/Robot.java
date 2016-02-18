@@ -58,6 +58,7 @@ public class Robot extends IterativeRobot {
 	
 	
 	public static volatile EncoderBase encoder; //Encoder class to access other threads
+	public static volatile Vision vision;
 	public static volatile LED led; //Multi-thread access variable
 	
 	
@@ -93,6 +94,7 @@ public class Robot extends IterativeRobot {
 
 		// Start vision thread
 		//new VisionThread().start();
+		vision = new Vision();
 		new EncoderThread().start();
 		Timer.delay(1);
 		ledTime = 0;
@@ -195,7 +197,8 @@ public class Robot extends IterativeRobot {
 			turret.checkInput(oi);
 		}
 		drive.checkInput(oi);
-		
+		Robot.autoAimVals = vision.updateSmartDash(0);
+		Timer.delay(0.005);
 	}
 
 	/**
@@ -214,44 +217,40 @@ public class Robot extends IterativeRobot {
 	public void testPeriodic() {}
 }
 
+
 /**
  * Thread which handles vision and fills in some public holder values.
  */
+
+/*
 class VisionThread extends Thread {
 
 	private Vision vision;
 	private static double offTarget;
 
-	/**
-	 * Default constructor.
-	 */
 	public VisionThread() {
 		try {
+			SmartDashboard.putBoolean("VISION_STARTED", true);
 			vision = new Vision();
 			offTarget = Robot.offTarget;
 		} catch (Throwable e) {
+			SmartDashboard.putBoolean("VISION_STARTED", false);
 			e.printStackTrace();
 		}
 	}
-
-	/**
-	 * {@inherit-javadoc}
-	 */
 	@Override
 	public void run() {
-		try {
-			while (true) {
-				vision.updateVals();
-				Robot.autoAimVals = vision.updateSmartDash(offTarget);
-				Thread.sleep(100);
-			}
-		} catch (Throwable e) {
-			e.printStackTrace();
+		int number = 0;
+		while (true) {
+			SmartDashboard.putNumber("STUPID", number);
+			number += 1;
+			vision.updateVals();
+			//Robot.autoAimVals = vision.updateSmartDash(offTarget);
+			try {Thread.sleep(100);} catch (InterruptedException e) {}
 		}
-
 	}
 
-}
+}*/
 
 class EncoderThread extends Thread {
 	

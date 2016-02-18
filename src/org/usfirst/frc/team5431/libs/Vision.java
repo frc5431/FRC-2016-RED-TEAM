@@ -45,7 +45,7 @@ class Maths {
 	}
 	
 	public double SpeedCalc(double distanceFromTower) {
-		return distanceFromTower;
+		return Math.pow((11.4671 * distanceFromTower), -0.5716); 
 	}
 	
 	/**
