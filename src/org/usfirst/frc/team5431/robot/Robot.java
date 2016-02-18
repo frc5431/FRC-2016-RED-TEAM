@@ -129,7 +129,6 @@ public class Robot extends IterativeRobot {
 	public void centerMode(){
 		drive.auto_driveStraight(144, 0.5, 0.05);
 	}
-	
 	public void autoShoot() {
 		if(autoAimVals[1] == 1) {
 			drive.drive(-0.3, 0.3);

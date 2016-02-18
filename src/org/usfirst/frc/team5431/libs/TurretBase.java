@@ -61,6 +61,7 @@ public class TurretBase {
 	 * @see #getSpeed(double)
 	 */
 	public void shoot() {
+		Robot.table.putBoolean("turret", motorspeed>0);
 		this.Left.set(motorspeed);
 		this.Right.set(-motorspeed);
 	}
@@ -107,10 +108,8 @@ public class TurretBase {
 	public void checkInput(OI map) {
 		if ((map.isShooting() ? 0 : 1) > pastbutton) {
 			if (running) {
-				Robot.table.putBoolean("intake", false);
 				setMotorSpeed(0);
 			} else {
-				Robot.table.putBoolean("turret", true);
 				setMotorSpeed(toSpeed);
 			}
 			shoot();

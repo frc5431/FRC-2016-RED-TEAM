@@ -55,6 +55,7 @@ public class Intake {
 	 * @see #getSpeed(double)
 	 */
 	public void intake() {
+		Robot.table.putBoolean("intake", motorspeed > 0);
 		this.top.set(motorspeed);
 	}
 
@@ -103,25 +104,23 @@ public class Intake {
 		
 		
 		if(limitState && !map.isIntaking()) {
-			Robot.table.putBoolean("intake", false);
+		
 			setMotorSpeed(0);
 		} else if(limitState && map.isIntaking()) {
-			Robot.table.putBoolean("intake", true);
 			setMotorSpeed(speed);
 		}
 		
 		if ((map.isIntaking() ? 0 : 1) > pastbutton) {
 			if (running) {
-				Robot.table.putBoolean("intake", false);
 				setMotorSpeed(0);
 			} else {
-				Robot.table.putBoolean("intake", true);
 				setMotorSpeed(speed);
 			}
 		}
 		pastbutton = map.isIntaking() ? 0 : 1;
 		if(map.isIntakingBackwards() && !running){
 			setMotorSpeed(-speed);
+			
 		}
 		intake();
 		
