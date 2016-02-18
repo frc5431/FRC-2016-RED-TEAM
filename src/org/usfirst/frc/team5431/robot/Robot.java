@@ -9,6 +9,7 @@ import org.usfirst.frc.team5431.libs.TurretBase;
 import org.usfirst.frc.team5431.libs.Vision;
 import org.usfirst.frc.team5431.map.OI;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -31,7 +32,7 @@ public class Robot extends IterativeRobot {
 
 	// Better than strings
 	enum AutoTask {
-		AutoShoot, StandStill
+		AutoShootLowbar, AutoShootCenter, StandStill
 	};
 
 	AutoTask currentAuto;
@@ -78,9 +79,10 @@ public class Robot extends IterativeRobot {
 
 		//intake.setSpeed(1);
 		//turret.setSpeed(0.73);
-
+		
 		auton_select = new SendableChooser();
-		auton_select.addDefault("AutoShoot Lowbar", AutoTask.AutoShoot);
+		auton_select.addObject("AutoShoot Lowbar", AutoTask.AutoShootLowbar);
+		auton_select.addDefault("AutoShoot Center4", AutoTask.AutoShootCenter);
 		auton_select.addObject("StandStill", AutoTask.StandStill);
 
 		// pneumatic.startCompressor();
@@ -102,16 +104,28 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Auto Selected: ", currentAuto.toString());
 		led.reset();
 		//SmartDashboard.putString("SERIAL", led.SendSerial("READY"));
-		led.demo();
+		//led.demo();
+		
 	}
 
 	/** 
 	 * Autonomously drives under the low bar.
+	 * Assumes that we <u>begin in front of lowbar</u>
 	 */
 	public void lowbarMode() {
 		// Drive 15 feet
 		drive.auto_driveStraight(156, 0.5, 0.05); // Distance (in), speed (0-1), curve(0-0.1)
+		drive.auto_driveTurn(-40, 0.5, 0.05);
 
+	}
+	
+	/**
+	 * Autonomously drives forward (for the other 4 besides lowbar)
+	 * Assumes that we begin in front of a defense <b>other</b> than:
+	 * <li>Cheval de Frise</li><li>Portcullis</li><li>Sally Port</li>
+	 */
+	public void centerMode(){
+		drive.auto_driveStraight(156, 0.5, 0.05);
 	}
 	
 	public void autoShoot() {
@@ -129,9 +143,15 @@ public class Robot extends IterativeRobot {
 		Timer.delay(2);
 
 		switch (currentAuto) {
-		case AutoShoot:
+		case AutoShootLowbar:
 			if (runOnce) {
 				this.lowbarMode();
+				runOnce = false;
+			}
+			break;
+		case AutoShootCenter:
+			if(runOnce){
+				this.centerMode();
 				runOnce = false;
 			}
 			break;
@@ -140,6 +160,8 @@ public class Robot extends IterativeRobot {
 			Timer.delay(0.01);
 			break;
 		}
+		
+		//DriverStation.getInstance().
 	}
 
 	/**

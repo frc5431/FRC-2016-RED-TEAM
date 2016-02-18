@@ -132,7 +132,7 @@ public class DriveBase {
 				leftDistance = (1/2 * -degrees) * robotWidth / 360;	//Negating because left needs to go backward.
 				rightDistance = (1/2 * degrees) * robotWidth / 360;
 			}
-			//Lets just do copy and paste here, shall we?
+			//Lets just do copy and paste here, shall we? You don't mind - right, David?
 			while (((left = Robot.encoder.LeftDistance()) < leftDistance)
 					&& ((right = Robot.encoder.RightDistance()) < rightDistance)) {
 				if (left < right - 0.1) {
