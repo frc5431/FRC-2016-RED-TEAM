@@ -9,7 +9,6 @@ import org.usfirst.frc.team5431.libs.TurretBase;
 import org.usfirst.frc.team5431.libs.Vision;
 import org.usfirst.frc.team5431.map.OI;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;

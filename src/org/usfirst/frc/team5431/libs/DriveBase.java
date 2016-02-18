@@ -152,7 +152,7 @@ public class DriveBase {
 	 * also allow smaller more precise movements
 	 */
 	private double exp(double Speed) {
-		return Speed/1.5;//(0.46 * Math.pow(Speed, 3)) + (0.5 * Speed);
+		return Speed/1.1;//(0.46 * Math.pow(Speed, 3)) + (0.5 * Speed);
 	}
 
 	/**
