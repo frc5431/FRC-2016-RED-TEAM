@@ -249,8 +249,8 @@ public class Vision {
 			SmartDashboard.putString("FIRE", "HOLE NOT FOUND!");
 			Robot.led.wholeStripRGB(120, 140, 120);
 			toReturn[0] = offVal;
-			toReturn[1] = 0;
-			toReturn[2] = 0;
+			toReturn[1] = 5;
+			toReturn[2] = 5;
 		}
 		
 		return toReturn;

@@ -50,7 +50,7 @@ public class DriveBase {
 
 		/*
 		 * if (Robot.launch==Robot.LaunchType.BLUE) {
-		 * frontright.setInverted(true); frontleft.setInverted(true);
+		  frontright.setInverted(true); frontleft.setInverted(true);
 		 * rearleft.setInverted(true); }
 		 */
 		this.rearleft.clearStickyFaults();

@@ -22,7 +22,7 @@ public class EncoderBase {
 	 * Default constructor which handles {@link Encoder encoders} and {@link Counter counters}.
 	 **/
 	public EncoderBase() {
-		this.Left = new Encoder((SensorMap.LEFT_ENCODER_1), (SensorMap.LEFT_ENCODER_2), false, EncodingType.k4X);
+		this.Left = new Encoder((SensorMap.LEFT_ENCODER_1), (SensorMap.LEFT_ENCODER_2), true, EncodingType.k4X);
 		this.Right = new Encoder((SensorMap.RIGHT_ENCODER_1), (SensorMap.RIGHT_ENCODER_2), false, EncodingType.k4X);
 		
 		this.FlyLeft = new Counter(SensorMap.FLY_WHEEL_LEFT_COUNTER);

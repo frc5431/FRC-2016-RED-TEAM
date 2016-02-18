@@ -125,11 +125,19 @@ public class Robot extends IterativeRobot {
 	 * <li>Cheval de Frise</li><li>Portcullis</li><li>Sally Port</li>
 	 */
 	public void centerMode(){
-		drive.auto_driveStraight(156, 0.5, 0.05);
+		drive.auto_driveStraight(144, 0.5, 0.05);
 	}
 	
 	public void autoShoot() {
-		
+		if(autoAimVals[1] == 1) {
+			drive.drive(-0.3, 0.3);
+		} else if(autoAimVals[1] == 2) {
+			drive.drive(0.3, -0.3);
+		} else if(autoAimVals[1] == 5){
+			drive.drive(0, 0);
+		} else {
+			drive.drive(0, 0);
+		}
 	}
 
 	/**
