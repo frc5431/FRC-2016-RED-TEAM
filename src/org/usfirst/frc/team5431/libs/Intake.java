@@ -102,9 +102,8 @@ public class Intake {
 		//this is the code for the toggle
 		limitState = (!boulderLimit.get()); //|| !rightLimit.get()); //Reverses boulderLimit
 		
-		
+		Robot.table.putBoolean("ball in", limitState);
 		if(limitState && !map.isIntaking()) {
-		
 			setMotorSpeed(0);
 		} else if(limitState && map.isIntaking()) {
 			setMotorSpeed(speed);
