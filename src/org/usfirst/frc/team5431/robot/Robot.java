@@ -221,7 +221,7 @@ public class Robot extends IterativeRobot {
 	/**
 	 * This function is called periodically during operator control
 	 */
-	public void teleopPeriodic() {
+	public void teleopPeriodic() { //3.4028 - 1.2781 log(x)
 		table.putBoolean("connection", true);
 		ledTime += Timer.getFPGATimestamp() - ledTime;
 		SmartDashboard.putNumber("Time On", ledTime);
@@ -230,7 +230,6 @@ public class Robot extends IterativeRobot {
 			turret.checkInput(oi);
 		}
 		drive.checkInput(oi);
-		/*
 		try {
 			
 			vision.updateVals();
@@ -238,12 +237,13 @@ public class Robot extends IterativeRobot {
 			if(checkAutoAim[1] != 5){// && checkAutoAim[0] != 0){ //Found the hole
 				this.autoShoot(checkAutoAim);
 				SmartDashboard.putNumber("THE AUTO TURRET SPEED", checkAutoAim[0]);
-				//turret.setSpeed(checkAutoAim[0]);
-				//turret.setMotorSpeed(checkAutoAim[0]);
+				turret.setSpeed(checkAutoAim[0]);
+				turret.setMotorSpeed(checkAutoAim[0]);
+				turret.shoot();
 			}
 		} catch(Throwable a) {
 			SmartDashboard.putString("ERROR:", "Failed to update vision values!");
-		}*/
+		}
 	}
 
 	/**
