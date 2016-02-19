@@ -71,6 +71,8 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		runOnce = true;
 		
+		table = NetworkTable.getTable("5431");
+		
 		encoder = new EncoderBase();
 		turret = new TurretBase();
 		intake = new Intake();
@@ -94,9 +96,7 @@ public class Robot extends IterativeRobot {
 		//new VisionThread().start();
 		new EncoderThread().start();
 		Timer.delay(1);
-		ledTime = 0;
-		table = NetworkTable.getTable("5431");
-	}
+		ledTime = 0;	}
 
 	/**
 	 * Method called once at the start of autonomous mode.

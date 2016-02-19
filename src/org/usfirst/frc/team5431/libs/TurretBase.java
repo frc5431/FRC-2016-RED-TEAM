@@ -30,7 +30,7 @@ public class TurretBase {
 	//true because it is inverted at the start. it won't actually start running
 	private boolean running = true;
 	private int pastbutton = 0;
-	private double speed = 0.1, motorspeed = 0;
+	private double  motorspeed = 0;
 	public static volatile double toSpeed = 0.5;
 
 	/**
@@ -50,7 +50,7 @@ public class TurretBase {
 		this.Left.clearStickyFaults();
 		this.Right.clearStickyFaults();
 		
-		SmartDashboard.putNumber("TURRET SPEED", MotorMap.DEFAULT_FLYWHEEL_SPEED);
+		Robot.table.putNumber("turret max", MotorMap.DEFAULT_FLYWHEEL_SPEED);
 		new updateThread().start();
 
 	}
@@ -110,7 +110,7 @@ public class TurretBase {
 			if (running) {
 				setMotorSpeed(0);
 			} else {
-				setMotorSpeed(toSpeed);
+				setMotorSpeed(Robot.table.getNumber("turret max",MotorMap.DEFAULT_FLYWHEEL_SPEED));
 			}
 			shoot();
 		}
@@ -127,19 +127,6 @@ public class TurretBase {
 	private void setMotorSpeed(double d) {
 		motorspeed = d;
 		running = d > 0;
-	}
-
-	public void setSpeed(double d) {
-		speed = d;
-	}
-
-	/**
-	 * Returns the current speed to shoot at
-	 * 
-	 * @return the speed, as specified by {@link #setSpeed(double)}
-	 */
-	public double getSpeed() {
-		return speed;
 	}
 }
 
