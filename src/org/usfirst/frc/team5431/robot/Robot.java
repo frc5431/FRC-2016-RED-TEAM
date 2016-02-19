@@ -61,6 +61,7 @@ public class Robot extends IterativeRobot {
 	public static volatile Vision vision;
 	public static volatile LED led; //Multi-thread access variable
 	
+	double checkAutoAim[] = {0, 0, 0};
 	
 	/**
 	 * Holder value whose value is changed by other threads.
@@ -102,6 +103,8 @@ public class Robot extends IterativeRobot {
 		
 		ledTime = 0;
 		table = NetworkTable.getTable("5431");
+		
+		
 	}
 
 	/**
@@ -148,11 +151,13 @@ public class Robot extends IterativeRobot {
 		drive.auto_driveStraight(70, 0.5, 0.14);
 	}
 	
-	public void autoShoot() {
+	public void autoShoot(double autoAimVals[]) {
+		if(autoAimVals.length > 3)
+			return;
 		if(autoAimVals[1] == 1) {
-			drive.drive(-0.3, 0.3);
+			drive.drive(-0.49, 0.49);
 		} else if(autoAimVals[1] == 2) {
-			drive.drive(0.3, -0.3);
+			drive.drive(0.49, -0.49);
 		} else if(autoAimVals[1] == 5){
 			drive.drive(0, 0);
 		} else {
@@ -210,6 +215,7 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		runOnce = true;
 		ledTime = 0;
+		
 	}
 
 	/**
@@ -224,12 +230,20 @@ public class Robot extends IterativeRobot {
 			turret.checkInput(oi);
 		}
 		drive.checkInput(oi);
+		/*
 		try {
-			vision.updateVals();
-			vision.updateSmartDash();
-		} catch(Throwable a) {
 			
-		}
+			vision.updateVals();
+			checkAutoAim = vision.updateSmartDash();
+			if(checkAutoAim[1] != 5){// && checkAutoAim[0] != 0){ //Found the hole
+				this.autoShoot(checkAutoAim);
+				SmartDashboard.putNumber("THE AUTO TURRET SPEED", checkAutoAim[0]);
+				//turret.setSpeed(checkAutoAim[0]);
+				//turret.setMotorSpeed(checkAutoAim[0]);
+			}
+		} catch(Throwable a) {
+			SmartDashboard.putString("ERROR:", "Failed to update vision values!");
+		}*/
 	}
 
 	/**
