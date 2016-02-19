@@ -219,7 +219,7 @@ table = NetworkTable.getTable("5431");
 	/**
 	 * This function is called periodically during operator control
 	 */
-	public void teleopPeriodic() {
+	public void teleopPeriodic() { //3.4028 - 1.2781 log(x)
 		table.putBoolean("connection", true);
 		ledTime += Timer.getFPGATimestamp() - ledTime;
 		SmartDashboard.putNumber("Time On", ledTime);
@@ -229,7 +229,6 @@ table = NetworkTable.getTable("5431");
 		}
 		table.putNumber("current turret speed", (encoder.rightFlyRPM()+encoder.leftFlyRPM())/2);
 		drive.checkInput(oi);
-		/*
 		try {
 			
 			vision.updateVals();
@@ -237,12 +236,13 @@ table = NetworkTable.getTable("5431");
 			if(checkAutoAim[1] != 5){// && checkAutoAim[0] != 0){ //Found the hole
 				this.autoShoot(checkAutoAim);
 				SmartDashboard.putNumber("THE AUTO TURRET SPEED", checkAutoAim[0]);
-				//turret.setSpeed(checkAutoAim[0]);
-				//turret.setMotorSpeed(checkAutoAim[0]);
+				turret.setSpeed(checkAutoAim[0]);
+				turret.setMotorSpeed(checkAutoAim[0]);
+				turret.shoot();
 			}
 		} catch(Throwable a) {
 			SmartDashboard.putString("ERROR:", "Failed to update vision values!");
-		}*/
+		}
 	}
 
 	/**
