@@ -27,10 +27,10 @@ class Maths {
 	//Distances and resolution values
 	public static final double 
 			screenHalf = 170,
-			minDistance = 90,
-			maxDistance = 144,
-			leftTrig = -10,
-			rightTrig = 10;
+			minDistance = 77,
+			maxDistance = 127,
+			leftTrig = -13,
+			rightTrig = 13;
 			
 	/**
 	 * Calculates the distance of a location
@@ -192,7 +192,7 @@ public class Vision {
 		
 		count += 1;
 		
-		double[] toReturn = {0};
+		double toReturn[] = {0, 0, 0};
 		
 		int toShoot = math.chooseHole(areas, distances, holeSolids, fromCenters); //Chooses an object to shoot at(Method below)
 		SmartDashboard.putNumber("Hole Num:", toShoot); //Display to dashboard what to shoot at
@@ -217,7 +217,7 @@ public class Vision {
 			if((forback == 0) && (lefight == 0)) {
 				SmartDashboard.putString("FIRE", "YES FIRE!");
 				SmartDashboard.putString("PULL", "YES FIRE!");	
-				Robot.led.wholeStripRGB(255, 0, 0);
+				//Robot.led.wholeStripRGB(255, 0, 0);
 				toReturn[0] = readyVal;
 				toReturn[1] = 0;
 				toReturn[2] = 0;
@@ -226,28 +226,30 @@ public class Vision {
 				String firing = "";
 				if (forback == 1) {
 					pulling = "Drive Back!";
-					Robot.led.backwards(0, 0, 255, 60);
+					//Robot.led.backwards(0, 0, 255, 60);
 				}else if(forback == 2) {
 					pulling = "Drive Forward!";
-					Robot.led.forwards(0, 255, 255, 60);
+					//Robot.led.forwards(0, 255, 255, 60);
 				}
+				
 				if(lefight == 1) {
 					firing = "Turn Left!";
-					Robot.led.turnLeft(255, 135, 0, 65);
+					//Robot.led.turnLeft(255, 135, 0, 65);
 				} else if(lefight == 2) {
 					firing = "Turn Right!";
-					Robot.led.turnRight(255, 135, 0, 65);
+					//Robot.led.turnRight(255, 135, 0, 65);
 				}
 				SmartDashboard.putString("PULL", pulling);
 				SmartDashboard.putString("FIRE", firing);
 				
-				toReturn[0] = ((readyVal+offVal)/2) - 0.05;
+				toReturn[0] = offVal;
 				toReturn[1] = lefight;
 				toReturn[2] = forback;
+				
 			}
 		} else {
 			SmartDashboard.putString("FIRE", "HOLE NOT FOUND!");
-			Robot.led.wholeStripRGB(120, 140, 120);
+			//Robot.led.wholeStripRGB(120, 140, 120);
 			toReturn[0] = offVal;
 			toReturn[1] = 5;
 			toReturn[2] = 5;

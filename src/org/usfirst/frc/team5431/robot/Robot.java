@@ -33,7 +33,7 @@ public class Robot extends IterativeRobot {
 
 	// Better than strings
 	enum AutoTask {
-		AutoShootLowbar, AutoShootCenter, StandStill
+		AutoShootLowbar, AutoShootCenter, AutoShootMoat, BarelyForward, StandStill
 	};
 
 	AutoTask currentAuto;
@@ -58,6 +58,7 @@ public class Robot extends IterativeRobot {
 	
 	
 	public static volatile EncoderBase encoder; //Encoder class to access other threads
+	public static volatile Vision vision;
 	public static volatile LED led; //Multi-thread access variable
 	
 	
@@ -76,6 +77,7 @@ public class Robot extends IterativeRobot {
 		turret = new TurretBase();
 		intake = new Intake();
 		drive = new DriveBase();
+		vision = new Vision();
 		oi = new OI(); // Joystick mapping
 		led = new LED(); 
 
@@ -86,6 +88,8 @@ public class Robot extends IterativeRobot {
 		auton_select.addObject("AutoShoot Lowbar", AutoTask.AutoShootLowbar);
 		auton_select.addDefault("AutoShoot Center4", AutoTask.AutoShootCenter);
 		auton_select.addObject("StandStill", AutoTask.StandStill);
+		auton_select.addObject("AutoShoot Moat", AutoTask.AutoShootMoat);
+		auton_select.addObject("Barely Forward", AutoTask.BarelyForward);
 
 		// pneumatic.startCompressor();
 
@@ -93,8 +97,9 @@ public class Robot extends IterativeRobot {
 
 		// Start vision thread
 		//new VisionThread().start();
-		new EncoderThread().start();
-		Timer.delay(1);
+		//new EncoderThread().start();
+		//Timer.delay(1);
+		
 		ledTime = 0;
 		table = NetworkTable.getTable("5431");
 	}
@@ -105,7 +110,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		currentAuto = (AutoTask) auton_select.getSelected();
 		SmartDashboard.putString("Auto Selected: ", currentAuto.toString());
-		led.reset();
+		//led.reset();
 		//SmartDashboard.putString("SERIAL", led.SendSerial("READY"));
 		//led.demo();
 		
@@ -125,10 +130,22 @@ public class Robot extends IterativeRobot {
 	/**
 	 * Autonomously drives forward (for the other 4 besides lowbar)
 	 * Assumes that we begin in front of a defense <b>other</b> than:
-	 * <li>Cheval de Frise</li><li>Portcullis</li><li>Sally Port</li>
+	 * <li>Cheval de Frise</li><li>Portcullis</li><li>Sally Port</li><li><ul>Moat</ul></li>
 	 */
 	public void centerMode(){
-		drive.auto_driveStraight(144, 0.5, 0.05);
+		//drive.auto_driveStraight(144, 0.7, 0.14); //.5 = lowbar, .
+		drive.auto_driveStraight(50, 0.5, 0.14);
+		drive.auto_driveStraight(70, 1, 0.14);
+		drive.auto_driveStraight(14, 0.5, 0.14);
+	}
+	
+	public void moatMode(){
+		drive.auto_driveStraightNoCorrection(139, 1, 0.14);
+//		/drive.auto_driveStraight(60, 1, 0.14);
+	}
+	
+	public void barelyForwardMode(){
+		drive.auto_driveStraight(70, 0.5, 0.14);
 	}
 	
 	public void autoShoot() {
@@ -166,6 +183,18 @@ public class Robot extends IterativeRobot {
 				runOnce = false;
 			}
 			break;
+		case BarelyForward:
+			if(runOnce){
+				this.barelyForwardMode();
+				runOnce = false;
+			}
+			break;
+		case AutoShootMoat:
+			if(runOnce){
+				this.moatMode();
+				runOnce = false;
+			}
+			break;
 		case StandStill:
 		default:
 			Timer.delay(0.01);
@@ -195,7 +224,12 @@ public class Robot extends IterativeRobot {
 			turret.checkInput(oi);
 		}
 		drive.checkInput(oi);
-		
+		try {
+			vision.updateVals();
+			vision.updateSmartDash();
+		} catch(Throwable a) {
+			
+		}
 	}
 
 	/**
@@ -217,41 +251,33 @@ public class Robot extends IterativeRobot {
 /**
  * Thread which handles vision and fills in some public holder values.
  */
+/*
 class VisionThread extends Thread {
 
 	private Vision vision;
 	private static double offTarget;
-
-	/**
-	 * Default constructor.
-	 */
 	public VisionThread() {
-		try {
-			vision = new Vision();
-			offTarget = Robot.offTarget;
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		vision = new Vision();
+		offTarget = Robot.offTarget;
 	}
 
-	/**
-	 * {@inherit-javadoc}
-	 */
 	@Override
 	public void run() {
-		try {
-			while (true) {
+		int ready = 0;
+		while (true) {
+			try {
 				vision.updateVals();
 				Robot.autoAimVals = vision.updateSmartDash(offTarget);
-				Thread.sleep(100);
+				SmartDashboard.putString("READY-READY----READy", String.valueOf(ready));
+				ready += 1;
+				try {Thread.sleep(500);} catch (InterruptedException e) {}
+			} catch(Throwable error) {
+				error.printStackTrace();
 			}
-		} catch (Throwable e) {
-			e.printStackTrace();
 		}
-
 	}
 
-}
+}*/
 
 class EncoderThread extends Thread {
 	
