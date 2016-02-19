@@ -6,6 +6,7 @@ import org.usfirst.frc.team5431.map.MotorMap;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Class that handles tank drive.
@@ -53,6 +54,12 @@ public class DriveBase {
 		  frontright.setInverted(true); frontleft.setInverted(true);
 		 * rearleft.setInverted(true); }
 		 */
+		
+		this.frontleft.setInverted(true);
+		this.rearleft.setInverted(true);
+		this.frontright.setInverted(true);
+		this.rearright.setInverted(true);
+		
 		this.rearleft.clearStickyFaults();
 		this.frontleft.clearStickyFaults();
 		this.rearright.clearStickyFaults();
@@ -92,19 +99,33 @@ public class DriveBase {
 
 		double left = 0;
 		double right = 0;
-
+		
 		while (((left = Robot.encoder.LeftDistance()) < distance)
 				&& ((right = Robot.encoder.RightDistance()) < distance)) {
-			if (left < right - 0.1) {
-				drive.drive(speed + curve, speed - curve);
-			} else if (left > right + 0.1) {
-				drive.drive(speed - curve, speed + curve);
+			if (left < (right - 0.01)) {
+				this.drive((speed + curve + .06), (speed - curve));
+			} else if (left > (right + 0.01)) {
+				this.drive((speed - curve), (speed + curve)+ .06);
 			} else {
-				drive.drive(speed, speed);
+				this.drive((speed), (speed));
 			}
 		}
-		drive.drive(0, 0);
+		this.drive(0, 0);
 	}
+	
+	public void auto_driveStraightNoCorrection(double distance, double speed, double curve) { //Why do you have curve? Liave, you need to document!
+		Robot.encoder.resetDrive();
+
+		double left = 0;
+		double right = 0;
+		
+		while (((left = Robot.encoder.LeftDistance()) < distance)
+				&& ((right = Robot.encoder.RightDistance()) < distance)) {
+			this.drive(speed, speed);
+		}
+		this.drive(0, 0);
+	}
+	
 	
 	/**
 	 * Encoder-based turning with input in degrees and speed.
@@ -135,15 +156,15 @@ public class DriveBase {
 			//Lets just do copy and paste here, shall we? You don't mind - right, David?
 			while (((left = Robot.encoder.LeftDistance()) < leftDistance)
 					&& ((right = Robot.encoder.RightDistance()) < rightDistance)) {
-				if (left < right - 0.1) {
-					drive.drive(speed + curve, speed - curve);
-				} else if (left > right + 0.1) {
-					drive.drive(speed - curve, speed + curve);
+				if (left < (right - 0.01)) {
+					this.drive((speed + curve + .06), (speed - curve));
+				} else if (left > (right + 0.01)) {
+					this.drive((speed - curve), (speed + curve)+ .06);
 				} else {
-					drive.drive(speed, speed);
+					this.drive((speed), (speed));
 				}
 			}
-			drive.drive(0, 0);
+			this.drive(0, 0);
 		}
 		//else I would return something (we need to make a list of error codes and not have any void functions . . .)
 	}
@@ -162,7 +183,7 @@ public class DriveBase {
 	 *            Current operator interface.
 	 */
 	public void checkInput(OI map) {
-		this.drive(exp(map.getDriveLeftYAxis()), exp(map.getDriveRightYAxis()));
+		this.drive(-exp(map.getDriveLeftYAxis()), -exp(map.getDriveRightYAxis()));
 	}
 
 }

@@ -124,7 +124,7 @@ public class TurretBase {
 	 * @param Speed
 	 *            for the motor
 	 */
-	private void setMotorSpeed(double d) {
+	public void setMotorSpeed(double d) {
 		motorspeed = d;
 		running = d > 0;
 	}
