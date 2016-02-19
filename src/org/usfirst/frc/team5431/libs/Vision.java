@@ -76,25 +76,28 @@ class Maths {
 		
     		//If any of the values are negative make sure that they are positive
 	    	for(int now = 0; now < amount; now++) {
-	    		areas[now] = (areas[now] < 0) ? -(areas[now]) : areas[now];
-	    		distances[now] = (distances[now] < 0) ? -(distances[now]) : distances[now];
-	    		solidity[now] = (solidity[now] < 0) ? -(solidity[now]) : solidity[now];
-	    		fromCenter[now] = (fromCenter[now] < 0) ? -(fromCenter[now]) : fromCenter[now];
-	    	}
-	    	
-	    	//Calculate the values by multiplying the max values
-	    	for(int now = 0; now < amount; now++) {
+	    		areas[now] = Math.abs(areas[now]);
+	    		distances[now] = Math.abs(distances[now]);
+	    		solidity[now] = Math.abs(solidity[now]);
+	    		fromCenter[now] = Math.abs(fromCenter[now]);
+	    		
 	    		holes[now] = ((areas[now]/2000) * areaNum) + ((1-(distances[now]/maxDistance)) * distNum)
 	    		+ ((solidity[now]/100) * solidNum) + ((fromCenter[now]/screenHalf) * fromNum);
+	    		
+	    		if(holes[now] > largest) {
+	    			largest = holes[now];
+	    			current = now;
+	    		}
+	    		
 	    	}
 	    	
-	    	//See which hole was the largest and add that to the current hole
+	    	/*	    	//See which hole was the largest and add that to the current hole
 	    	for(int now = 0; now < holes.length; now++) {
 	    		if(holes[now] > largest) {
 	    			largest = holes[now];
 	    			current = now;
 	    		}
-	    	}
+	    	}*/
 	    	return current;
     	}
     	catch(Exception ignored) {
@@ -142,6 +145,8 @@ public class Vision {
 			fromCenters = {0},
 			holeSolids = {0};
 			
+	public static volatile double overspeed = 0.1;
+	
 	
 	/**
 	 * Default constructor
@@ -149,6 +154,9 @@ public class Vision {
 	public Vision() {
 		grip = NetworkTable.getTable("GRIP/vision");
 		math = new Maths();
+		
+		new OverrideThread().start();
+		
 		//led = new LED();
 	}
 	
@@ -359,3 +367,19 @@ public class Vision {
 	}
 	
 }
+
+class OverrideThread extends Thread {
+	
+	public OverrideThread() {
+		SmartDashboard.putNumber("OverrideSpeed", 0.03);
+	}
+	
+	@Override
+	public void run() {
+		while(true) {
+			Vision.overspeed = (double) SmartDashboard.getNumber("OverrideSpeed", 0.03);
+			try {Thread.sleep(800);} catch (InterruptedException e) {}
+		}
+	}
+}
+
