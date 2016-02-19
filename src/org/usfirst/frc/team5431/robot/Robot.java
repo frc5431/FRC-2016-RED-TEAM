@@ -236,7 +236,7 @@ table = NetworkTable.getTable("5431");
 			if(checkAutoAim[1] != 5){// && checkAutoAim[0] != 0){ //Found the hole
 				this.autoShoot(checkAutoAim);
 				SmartDashboard.putNumber("THE AUTO TURRET SPEED", checkAutoAim[0]);
-				turret.setSpeed(checkAutoAim[0]);
+				//turret.setSpeed(checkAutoAim[0]);
 				turret.setMotorSpeed(checkAutoAim[0]);
 				turret.shoot();
 			}

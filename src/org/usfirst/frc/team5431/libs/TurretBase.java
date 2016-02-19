@@ -110,7 +110,7 @@ public class TurretBase {
 			if (running) {
 				setMotorSpeed(0);
 			} else {
-				setMotorSpeed(Robot.table.getNumber("turret max?",MotorMap.DEFAULT_FLYWHEEL_SPEED));
+				setMotorSpeed(Robot.table.getNumber("turret max ",MotorMap.DEFAULT_FLYWHEEL_SPEED));
 			}
 			shoot();
 		}
