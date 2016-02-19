@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
  *
  */
 public class Intake {
-	private final CANTalon top;
+	private final CANTalon top,bot;
 	//true because it is inverted at the start. it won't actually start running
 	private boolean running = true;
 	private boolean limitState = false;
@@ -33,16 +33,20 @@ public class Intake {
 	 */
 	public Intake() {
 		this.top = new CANTalon(MotorMap.INTAKE);
+		this.bot = new CANTalon(MotorMap.UNUSED);
 		
+		this.bot.enable();
 		this.top.enable();
 		//top.setInverted(true);
 		//bot.setInverted(true);
 
 		this.top.clearStickyFaults();
+		this.bot.clearStickyFaults();
 		
 		//this.top.setInverted(true);
 		
 		this.top.enableBrakeMode(true);
+		this.bot.enableBrakeMode(true);
 		
 		boulderLimit = new DigitalInput(SensorMap.INTAKE_LIMIT);
 		Robot.table.putNumber("intake max", MotorMap.DEFAULT_INTAKE_SPEED);
@@ -55,8 +59,8 @@ public class Intake {
 	 * @see #getSpeed(double)
 	 */
 	public void intake() {
-		Robot.table.putBoolean("intake", motorspeed > 0);
 		this.top.set(motorspeed);
+		this.bot.set(motorspeed);
 	}
 
 	/**
@@ -143,7 +147,8 @@ public class Intake {
 	 */
 	private void setMotorSpeed(double d) {
 		motorspeed = d;
-		running = d > 0;
+		running= d!=0;
+		Robot.table.putBoolean("intake", running);
 	}
 
 }
