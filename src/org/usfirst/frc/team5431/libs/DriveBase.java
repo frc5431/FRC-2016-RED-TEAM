@@ -155,7 +155,7 @@ public class DriveBase {
 			}
 			else{
 				leftDistance = ((1.0/2.0) * degrees) * robotWidth / (360.0);	//Negating because left needs to go backward.
-				rightDistance = ((1.0/2.0) * -degrees) * robotWidth / (360.0);
+				rightDistance = ((1.0/2.0) * degrees) * robotWidth / (360.0);
 				SmartDashboard.putString("turnLeft", "NO");
 				rightNegate = -1;
 			}
@@ -166,12 +166,14 @@ public class DriveBase {
 			while (((left = Robot.encoder.LeftDistance()) < leftDistance * leftNegate)
 					&& ((right = Robot.encoder.RightDistance()) < rightDistance * rightNegate)) {
 				if (left < (right - 0.01)) {
-					this.drive((speed + curve + .06), (speed - curve));
+					this.drive(((speed + curve + .06) * leftNegate), (speed - curve) * rightNegate);
 				} else if (left > (right + 0.01)) {
-					this.drive((speed - curve), (speed + curve)+ .06);
+					this.drive((speed - curve) * leftNegate, ((speed + curve)+ .06)* rightNegate);
 				} else {
-					this.drive((speed), (speed));
+					this.drive((speed) * leftNegate, (speed) * rightNegate);
 				}
+				SmartDashboard.putNumber("leftEncoderDistance", Robot.encoder.LeftDistance());
+				SmartDashboard.putNumber("rightEncoderDistance", Robot.encoder.RightDistance());
 			}
 			this.drive(0, 0);
 		}

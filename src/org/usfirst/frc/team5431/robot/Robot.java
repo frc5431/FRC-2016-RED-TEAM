@@ -171,7 +171,6 @@ table = NetworkTable.getTable("5431");
 		//vision.updateVals();
 		SmartDashboard.putNumber("Run TIME", ledTime);
 		ledTime += 1;
-		Timer.delay(2);
 
 		switch (currentAuto) {
 		case AutoShootLowbar:
