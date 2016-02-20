@@ -25,10 +25,10 @@ class Maths {
 	//Distances and resolution values
 	public static final double 
 			screenHalf = 170,
-			minDistance = 90,
-			maxDistance = 144,
-			leftTrig = -10,
-			rightTrig = 10;
+			minDistance = 77,
+			maxDistance = 135,
+			leftTrig = -9,
+			rightTrig = 9;
 			
 	/**
 	 * Calculates the distance of a location
@@ -39,7 +39,11 @@ class Maths {
 	 * @return The distance from the hole
 	 * */
 	public double DistanceCalc(double pixelsFromTop) {
-		return (33.8569 * Math.pow(1.007, pixelsFromTop)); //Make sure you pre test these values
+		return (56.6624) * Math.pow(1.0073, pixelsFromTop); //return (33.8569 * Math.pow(1.007, pixelsFromTop)); //Make sure you pre test these values
+	}
+	
+	public double SpeedCalc(double distanceFromTower) {
+		return (3.4028) - (0.5551 * Math.log(distanceFromTower));
 	}
 	
 	/**
@@ -72,25 +76,28 @@ class Maths {
 		
     		//If any of the values are negative make sure that they are positive
 	    	for(int now = 0; now < amount; now++) {
-	    		areas[now] = (areas[now] < 0) ? -(areas[now]) : areas[now];
-	    		distances[now] = (distances[now] < 0) ? -(distances[now]) : distances[now];
-	    		solidity[now] = (solidity[now] < 0) ? -(solidity[now]) : solidity[now];
-	    		fromCenter[now] = (fromCenter[now] < 0) ? -(fromCenter[now]) : fromCenter[now];
+	    		areas[now] = Math.abs(areas[now]);
+	    		distances[now] = Math.abs(distances[now]);
+	    		solidity[now] = Math.abs(solidity[now]);
+	    		fromCenter[now] = Math.abs(fromCenter[now]);
+	    		
+	    		holes[now] = (((areas[now]/2000) * areaNum) + ((1 - (distances[now]/maxDistance)) * distNum)
+	    		+ ((solidity[now]/100) * solidNum) - ((fromCenter[now]/screenHalf) * fromNum))/4;
+	    		
+	    		if(holes[now] > largest) {
+	    			largest = holes[now];
+	    			current = now;
+	    		}
+	    		
 	    	}
 	    	
-	    	//Calculate the values by multiplying the max values
-	    	for(int now = 0; now < amount; now++) {
-	    		holes[now] = ((areas[now]/2000) * areaNum) + ((1-(distances[now]/maxDistance)) * distNum)
-	    		+ ((solidity[now]/100) * solidNum) + ((fromCenter[now]/screenHalf) * fromNum);
-	    	}
-	    	
-	    	//See which hole was the largest and add that to the current hole
+	    	/*	    	//See which hole was the largest and add that to the current hole
 	    	for(int now = 0; now < holes.length; now++) {
 	    		if(holes[now] > largest) {
 	    			largest = holes[now];
 	    			current = now;
 	    		}
-	    	}
+	    	}*/
 	    	return current;
     	}
     	catch(Exception ignored) {
@@ -138,6 +145,8 @@ public class Vision {
 			fromCenters = {0},
 			holeSolids = {0};
 			
+	public static volatile double overspeed = 0.1;
+	
 	
 	/**
 	 * Default constructor
@@ -145,6 +154,9 @@ public class Vision {
 	public Vision() {
 		grip = NetworkTable.getTable("GRIP/vision");
 		math = new Maths();
+		
+		new OverrideThread().start();
+		
 		//led = new LED();
 	}
 	
@@ -165,30 +177,31 @@ public class Vision {
 	/**
 	 * Updates the {@linkplain SmartDashboard} with the new values.
 	 * 
-	 * @see #updateVals()
+	 * @return An array of values, which says what speed to set the motors of
+	 * @see #updateSmartDash(double)
 	 * */
-	public void updateSmartDash() {
-		this.updateSmartDash(0, 0);
+	
+	public double[] updateSmartDash() {
+		return this.updateSmartDash(0.0);
 	}
-
+	
 	/**
 	 * Updates the {@linkplain SmartDashboard} with the new values.
 	 * 
-	 * @param readyVal Value to set if it is ready to shoot
 	 * @param offVal Value to set if it is off
 	 * @return An array of values, where each value says if it is ready to shoot. A 1 size array of 0 means it failed or not ready to shoot.
 	 * @see #updateVals()
 	 * */
-	public double[] updateSmartDash(double readyVal, double offVal) {
+	public double[] updateSmartDash(double offVal) {
 		
 		SmartDashboard.putNumber("UPDATE VALUE", count);
 		
 		count += 1;
 		
-		double[] toReturn = {0};
+		double toReturn[] = {0, 0, 0};
 		
 		int toShoot = math.chooseHole(areas, distances, holeSolids, fromCenters); //Chooses an object to shoot at(Method below)
-		SmartDashboard.putNumber("Hole Num:", toShoot); //Display to dashboard what to shoot at
+		SmartDashboard.putNumber("Hole Number:", toShoot); //Display to dashboard what to shoot at
 		
 		if(toShoot != 666) {//Don't shoot at nothing (THE DEVIL)
 			double tempCenter = this.fromCenter(Maths.screenHalf)[toShoot]; //Temp center values
@@ -205,10 +218,13 @@ public class Vision {
 			int lefight = (math.withIn(tempCenter, Maths.leftTrig, Maths.rightTrig)) ? 0 :
 					(tempCenter < Maths.leftTrig) ? 1 : 2; //Amount to turn the turrent
 			
+			double readyVal = math.SpeedCalc(distances[toShoot]);
+			SmartDashboard.putNumber("lefight autoAim", lefight);
+			SmartDashboard.putNumber("forback autoAim", forback);
 			if((forback == 0) && (lefight == 0)) {
 				SmartDashboard.putString("FIRE", "YES FIRE!");
 				SmartDashboard.putString("PULL", "YES FIRE!");	
-				//led.LEDFromColor("green");
+				//Robot.led.wholeStripRGB(255, 0, 0);
 				toReturn[0] = readyVal;
 				toReturn[1] = 0;
 				toReturn[2] = 0;
@@ -217,33 +233,33 @@ public class Vision {
 				String firing = "";
 				if (forback == 1) {
 					pulling = "Drive Back!";
-					//led.LEDFromColor("blue");
+					//Robot.led.backwards(0, 0, 255, 60);
 				}else if(forback == 2) {
 					pulling = "Drive Forward!";
-					//led.LEDFromColor("cyan");
+					//Robot.led.forwards(0, 255, 255, 60);
 				}
+				
 				if(lefight == 1) {
 					firing = "Turn Left!";
-					//led.LEDFromColor("yellow");
+					//Robot.led.turnLeft(255, 135, 0, 65);
 				} else if(lefight == 2) {
 					firing = "Turn Right!";
-					//led.LEDFromColor("purple");
+					//Robot.led.turnRight(255, 135, 0, 65);
 				}
 				SmartDashboard.putString("PULL", pulling);
 				SmartDashboard.putString("FIRE", firing);
 				
-				//SmartDashboard.putString("PULL", ((forback == 0) ? "" : (forback == 1) ?  : "Drive Forward!")); //Display to the dashboard
-				//SmartDashboard.putString("FIRE", ((lefight == 0) ? "" : (lefight == 1) ? "Turn Left!" : "Turn Right!")); //Display to the dashboard
-				toReturn[0] = ((readyVal+offVal)/2) - 0.05;
+				toReturn[0] = offVal;
 				toReturn[1] = lefight;
 				toReturn[2] = forback;
+				
 			}
 		} else {
 			SmartDashboard.putString("FIRE", "HOLE NOT FOUND!");
-			//led.LEDFromColor("red");
+			//Robot.led.wholeStripRGB(120, 140, 120);
 			toReturn[0] = offVal;
-			toReturn[1] = 0;
-			toReturn[2] = 0;
+			toReturn[1] = 5;
+			toReturn[2] = 5;
 		}
 		
 		return toReturn;
@@ -284,7 +300,7 @@ public class Vision {
 	 * */
 	public double[] distance() {
 		final double objects[] = 
-				this.getX(), 
+				this.getY(), 
 				distances[] = {0};
 		int num = 0;
 		for(double object : objects) { //Get distance for each object
@@ -351,3 +367,19 @@ public class Vision {
 	}
 	
 }
+
+class OverrideThread extends Thread {
+	
+	public OverrideThread() {
+		SmartDashboard.putNumber("OverrideSpeed", 0.03);
+	}
+	
+	@Override
+	public void run() {
+		while(true) {
+			Vision.overspeed = (double) SmartDashboard.getNumber("OverrideSpeed", 0.03);
+			try {Thread.sleep(800);} catch (InterruptedException e) {}
+		}
+	}
+}
+

@@ -11,9 +11,10 @@ import org.usfirst.frc.team5431.map.OI;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+ 
 /**
  * This is the code for red team of Team 5431(There are two robots building and
  * red is awesome.) Look under the libs package to see where all the main
@@ -25,14 +26,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	public static LaunchType launch = LaunchType.RED;
-
-	public static enum LaunchType {
-		RED, BLUE, MAYOR, ID;
+	public static enum LaunchType{
+		RED,BLUE,MAYOR()
 	}
 
 	// Better than strings
 	enum AutoTask {
-		AutoShoot, StandStill
+		AutoShootLowbar, AutoShootCenter, AutoShootMoat, BarelyForward, StandStill
 	};
 
 	AutoTask currentAuto;
@@ -41,10 +41,9 @@ public class Robot extends IterativeRobot {
 	private DriveBase drive;
 	private Intake intake;
 	private OI oi;
-	private LED led;
-
 	private boolean runOnce = false; // Don't mess with please
 	private double ledTime;
+	public static NetworkTable table;
 	
 	/**
 	 * Holder array whose value is changed by other threads.
@@ -54,76 +53,57 @@ public class Robot extends IterativeRobot {
 																// can see the
 																// vals
 	
+	public static volatile double[] encoderVals = {0, 0, 0, 0}; //L Fly, R Fly, Left, Right
+	
 	
 	public static volatile EncoderBase encoder; //Encoder class to access other threads
+	public static volatile Vision vision;
+	public static volatile LED led; //Multi-thread access variable
 	
+	double checkAutoAim[] = {0, 0, 0};
 	
 	/**
 	 * Holder value whose value is changed by other threads.
 	 */
-	public static volatile double onTarget = 0.7, // Value to shoot at target
-			offTarget = 0.2; // Value to idle flyWheels
+	public static volatile double offTarget = 0.2; // Value to idle flyWheels
 
 	/**
 	 * Method called once in a {@linkplain Robot robot's} lifetime.
 	 */
 	public void robotInit() {
-		if (launch != LaunchType.ID) {
-			runOnce = true;
-			
-			encoder = new EncoderBase();
-			turret = new TurretBase();
-			intake = new Intake();
-			drive = new DriveBase();
-			oi = new OI(); // Joystick mapping
-			//boulderLimit = new DigitalInput(SensorMap.INTAKE_LIMIT);
-			// pneumatic = new PneumaticBase();
-
-			intake.setSpeed(1);
-			turret.setSpeed(0.73);
-
-			auton_select = new SendableChooser();
-			auton_select.addDefault("AutoShoot Lowbar", AutoTask.AutoShoot);
-			auton_select.addObject("StandStill", AutoTask.StandStill);
-
-			// pneumatic.startCompressor();
-
-			SmartDashboard.putData("Auto choices", auton_select);
-
-			// Start vision thread
-			new VisionThread().start();
-			led = new LED(); 
-			Timer.delay(1);
-			ledTime = 0;
-
-		}
 		runOnce = true;
+		
+		table = NetworkTable.getTable("5431");
 		
 		encoder = new EncoderBase();
 		turret = new TurretBase();
 		intake = new Intake();
 		drive = new DriveBase();
+		vision = new Vision();
 		oi = new OI(); // Joystick mapping
-		//boulderLimit = new DigitalInput(SensorMap.INTAKE_LIMIT);
-		// pneumatic = new PneumaticBase();
+		led = new LED(); 
 
-		intake.setSpeed(1);
-		turret.setSpeed(0.73);
-
+		//intake.setSpeed(1);
+		//turret.setSpeed(0.73);
+		
 		auton_select = new SendableChooser();
-		auton_select.addDefault("AutoShoot Lowbar", AutoTask.AutoShoot);
+		auton_select.addObject("AutoShoot Lowbar", AutoTask.AutoShootLowbar);
+		auton_select.addDefault("AutoShoot Center4", AutoTask.AutoShootCenter);
 		auton_select.addObject("StandStill", AutoTask.StandStill);
+		auton_select.addObject("AutoShoot Moat", AutoTask.AutoShootMoat);
+		auton_select.addObject("Barely Forward", AutoTask.BarelyForward);
 
 		// pneumatic.startCompressor();
 
 		SmartDashboard.putData("Auto choices", auton_select);
 
 		// Start vision thread
-		new VisionThread().start();
-		led = new LED(); 
+		//new VisionThread().start();
+		new EncoderThread().start();
+table = NetworkTable.getTable("5431");
+
 		Timer.delay(1);
-		ledTime = 0;
-	}
+		ledTime = 0;	}
 
 	/**
 	 * Method called once at the start of autonomous mode.
@@ -131,20 +111,56 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		currentAuto = (AutoTask) auton_select.getSelected();
 		SmartDashboard.putString("Auto Selected: ", currentAuto.toString());
-		led.demo();
 		//led.reset();
 		//SmartDashboard.putString("SERIAL", led.SendSerial("READY"));
 		//led.demo();
+		
 	}
 
 	/** 
 	 * Autonomously drives under the low bar.
+	 * Assumes that we <u>begin in front of lowbar</u>
 	 */
 	public void lowbarMode() {
 		// Drive 15 feet
-		this.auto_driveStraight(156, 0.5, 0.05); // Distance (in), speed
-		// (0-1), curve(0-0.1)
+		//drive.auto_driveStraight(156, 0.5, 0.05); // Distance (in), speed (0-1), curve(0-0.1)
+		drive.auto_driveTurn(40, 0.5, 0.05);
 
+	}
+	
+	/**
+	 * Autonomously drives forward (for the other 4 besides lowbar)
+	 * Assumes that we begin in front of a defense <b>other</b> than:
+	 * <li>Cheval de Frise</li><li>Portcullis</li><li>Sally Port</li><li><ul>Moat</ul></li>
+	 */
+	public void centerMode(){
+		//drive.auto_driveStraight(144, 0.7, 0.14); //.5 = lowbar, .
+		drive.auto_driveStraight(50, 0.5, 0.14);
+		drive.auto_driveStraight(70, 1, 0.14);
+		drive.auto_driveStraight(14, 0.5, 0.14);
+	}
+	
+	public void moatMode(){
+		drive.auto_driveStraightNoCorrection(139, 1, 0.14);
+//		/drive.auto_driveStraight(60, 1, 0.14);
+	}
+	
+	public void barelyForwardMode(){
+		drive.auto_driveStraight(70, 0.5, 0.14);
+	}
+	
+	public void autoShoot(double autoAimVals[]) {
+		if(autoAimVals.length > 3)
+			return;
+		if(autoAimVals[1] == 1) {
+			drive.drive(-0.49, 0.49);
+		} else if(autoAimVals[1] == 2) {
+			drive.drive(0.49, -0.49);
+		} else if(autoAimVals[1] == 5){
+			drive.drive(0, 0);
+		} else {
+			drive.drive(0, 0);
+		}
 	}
 
 	/**
@@ -152,16 +168,33 @@ public class Robot extends IterativeRobot {
 	 * based on the value of {@link #autoSelected}.
 	 */
 	public void autonomousPeriodic() {
-
 		//vision.updateVals();
 		SmartDashboard.putNumber("Run TIME", ledTime);
 		ledTime += 1;
 		Timer.delay(2);
 
 		switch (currentAuto) {
-		case AutoShoot:
+		case AutoShootLowbar:
 			if (runOnce) {
 				this.lowbarMode();
+				runOnce = false;
+			}
+			break;
+		case AutoShootCenter:
+			if(runOnce){
+				this.centerMode();
+				runOnce = false;
+			}
+			break;
+		case BarelyForward:
+			if(runOnce){
+				this.barelyForwardMode();
+				runOnce = false;
+			}
+			break;
+		case AutoShootMoat:
+			if(runOnce){
+				this.moatMode();
 				runOnce = false;
 			}
 			break;
@@ -170,6 +203,8 @@ public class Robot extends IterativeRobot {
 			Timer.delay(0.01);
 			break;
 		}
+		
+		//DriverStation.getInstance().
 	}
 
 	/**
@@ -178,25 +213,36 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		runOnce = true;
 		ledTime = 0;
-
+		
 	}
 
 	/**
 	 * This function is called periodically during operator control
 	 */
-	public void teleopPeriodic() {
-		if (launch != LaunchType.ID) {
-			ledTime += Timer.getFPGATimestamp() - ledTime;
-			SmartDashboard.putNumber("Time On", ledTime);
-			if (launch != LaunchType.BLUE) {
-				intake.checkInput(oi);
-				turret.checkInput(oi);
-			}
-			drive.checkInput(oi);
+	public void teleopPeriodic() { //3.4028 - 1.2781 log(x)
+		table.putBoolean("connection", true);
+		ledTime += Timer.getFPGATimestamp() - ledTime;
+		SmartDashboard.putNumber("Time On", ledTime);
+		if (launch!=LaunchType.BLUE) {
+			intake.checkInput(oi);
+			turret.checkInput(oi);
 		}
-		// Timer.delay(1);
-		// led.SendI2C("VAL");
-		// pneumatic.checkInput(oi);
+		table.putNumber("current turret speed", (encoder.rightFlyRPM()+encoder.leftFlyRPM())/2);
+		drive.checkInput(oi);
+//		try {
+//			
+//			vision.updateVals();
+//			checkAutoAim = vision.updateSmartDash();
+//			if(checkAutoAim[1] != 5){// && checkAutoAim[0] != 0){ //Found the hole
+//				this.autoShoot(checkAutoAim);
+//				SmartDashboard.putNumber("THE AUTO TURRET SPEED", checkAutoAim[0]);
+//				//turret.setSpeed(checkAutoAim[0]);
+//				turret.setMotorSpeed(checkAutoAim[0]);
+//				turret.shoot();
+//			}
+//		} catch(Throwable a) {
+//			SmartDashboard.putString("ERROR:", "Failed to update vision values!");
+//		}
 	}
 
 	/**
@@ -205,27 +251,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void disabledPeriodic() {
 		runOnce = true;
-	}
-
-	/**
-	 * Automagically drives straight
-	 */
-	private void auto_driveStraight(double distance, double speed, double curve) {
-		encoder.resetDrive();
-
-		double left = 0;
-		double right = 0;
-
-		while (((left = encoder.LeftDistance()) < distance) && ((right = encoder.RightDistance()) < distance)) {
-			if (left < right) {
-				drive.drive(speed + curve, speed - curve);
-			} else if (right > left) {
-				drive.drive(speed - curve, speed + curve);
-			} else {
-				drive.drive(speed, speed);
-			}
-		}
-		drive.drive(0, 0);
+		Robot.encoder.resetDrive();
 	}
 
 	/**
@@ -238,39 +264,56 @@ public class Robot extends IterativeRobot {
 /**
  * Thread which handles vision and fills in some public holder values.
  */
+/*
 class VisionThread extends Thread {
 
 	private Vision vision;
-	private static double onTarget, offTarget;
-
-	/**
-	 * Default constructor.
-	 */
+	private static double offTarget;
 	public VisionThread() {
-		try {
-			vision = new Vision();
-			onTarget = Robot.onTarget;
-			offTarget = Robot.offTarget;
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		vision = new Vision();
+		offTarget = Robot.offTarget;
 	}
 
-	/**
-	 * {@inherit-javadoc}
-	 */
 	@Override
 	public void run() {
-		try {
-			while (true) {
+		int ready = 0;
+		while (true) {
+			try {
 				vision.updateVals();
-				Robot.autoAimVals = vision.updateSmartDash(onTarget, offTarget);
-				Thread.sleep(100);
+				Robot.autoAimVals = vision.updateSmartDash(offTarget);
+				SmartDashboard.putString("READY-READY----READy", String.valueOf(ready));
+				ready += 1;
+				try {Thread.sleep(500);} catch (InterruptedException e) {}
+			} catch(Throwable error) {
+				error.printStackTrace();
 			}
-		} catch (Throwable e) {
-			e.printStackTrace();
 		}
-
 	}
 
+}*/
+
+class EncoderThread extends Thread {
+	
+	private EncoderBase encoder;
+	
+	public EncoderThread() {
+		encoder = Robot.encoder;
+	}
+	
+	@Override
+	public void run() {
+		while(true) {
+			Robot.encoderVals[0] = encoder.leftFlyRPM();
+			Robot.encoderVals[1] = encoder.rightFlyRPM();
+			Robot.encoderVals[2] = encoder.LeftDistance();
+			Robot.encoderVals[3] = encoder.RightDistance();
+			
+			SmartDashboard.putNumber("LEFT-WHEEL", Robot.encoderVals[2]);
+			SmartDashboard.putNumber("RIGHT-WHEEL", Robot.encoderVals[3]);
+			SmartDashboard.putNumber("FLY-LEFT-WHEEL", Robot.encoderVals[0]);
+			SmartDashboard.putNumber("FLY-RIGHT-WHEEL", Robot.encoderVals[1]);
+			
+			try {Thread.sleep(10);} catch (InterruptedException ignored) {}
+		}
+	}
 }

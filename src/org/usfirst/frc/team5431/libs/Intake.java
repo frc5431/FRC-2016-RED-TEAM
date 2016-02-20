@@ -19,15 +19,13 @@ import edu.wpi.first.wpilibj.DigitalInput;
  *
  */
 public class Intake {
-	private final CANTalon top;
+	private final CANTalon top,bot;
 	//true because it is inverted at the start. it won't actually start running
 	private boolean running = true;
 	private boolean limitState = false;
 	private static DigitalInput boulderLimit;
-	private static DigitalInput rightLimit;
 	private int pastbutton = 0;
-	private double speed = 0.7, motorspeed = 0;
-
+	private double motorspeed = 0;
 	/**
 	 * Default constructor for {@code TurretBase}. Binds the
 	 * {@linkplain CANTalon top motor} to {@value MotorMap#INTAKE} and the
@@ -35,18 +33,23 @@ public class Intake {
 	 */
 	public Intake() {
 		this.top = new CANTalon(MotorMap.INTAKE);
+		this.bot = new CANTalon(MotorMap.UNUSED);
 		
+		this.bot.enable();
 		this.top.enable();
 		//top.setInverted(true);
 		//bot.setInverted(true);
 
 		this.top.clearStickyFaults();
+		this.bot.clearStickyFaults();
 		
 		//this.top.setInverted(true);
 		
 		this.top.enableBrakeMode(true);
+		this.bot.enableBrakeMode(true);
 		
 		boulderLimit = new DigitalInput(SensorMap.INTAKE_LIMIT);
+		Robot.table.putNumber("intake max", MotorMap.DEFAULT_INTAKE_SPEED);
 		//rightLimit = new DigitalInput(8);
 	}
 
@@ -57,6 +60,7 @@ public class Intake {
 	 */
 	public void intake() {
 		this.top.set(motorspeed);
+		this.bot.set(motorspeed);
 	}
 
 	/**
@@ -102,23 +106,24 @@ public class Intake {
 		//this is the code for the toggle
 		limitState = (!boulderLimit.get()); //|| !rightLimit.get()); //Reverses boulderLimit
 		
-		
+		Robot.table.putBoolean("boulder", limitState);
 		if(limitState && !map.isIntaking()) {
 			setMotorSpeed(0);
 		} else if(limitState && map.isIntaking()) {
-			setMotorSpeed(speed);
+			setMotorSpeed(Robot.table.getNumber("intake max", MotorMap.DEFAULT_INTAKE_SPEED));
 		}
 		
 		if ((map.isIntaking() ? 0 : 1) > pastbutton) {
 			if (running) {
 				setMotorSpeed(0);
 			} else {
-				setMotorSpeed(speed);
+				setMotorSpeed(Robot.table.getNumber("intake max", MotorMap.DEFAULT_INTAKE_SPEED));
 			}
 		}
 		pastbutton = map.isIntaking() ? 0 : 1;
 		if(map.isIntakingBackwards() && !running){
-			setMotorSpeed(-speed);
+			setMotorSpeed(-Robot.table.getNumber("intake max", MotorMap.DEFAULT_INTAKE_SPEED));
+			
 		}
 		intake();
 		
@@ -142,27 +147,8 @@ public class Intake {
 	 */
 	private void setMotorSpeed(double d) {
 		motorspeed = d;
-		running = d > 0;
-	}
-
-	/**
-	 * Sets the speed at which the {@link Robot robot} will intake at when it is
-	 * toggled
-	 * 
-	 * @param Speed
-	 *            for the motor
-	 */
-	public void setSpeed(double d) {
-		speed = d;
-	}
-
-	/**
-	 * Returns the current speed to intake at
-	 * 
-	 * @return the speed, as specified by {@link #setSpeed(double)}
-	 */
-	public double getSpeed() {
-		return speed;
+		running= d!=0;
+		Robot.table.putBoolean("intake", running);
 	}
 
 }
