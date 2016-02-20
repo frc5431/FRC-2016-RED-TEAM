@@ -123,8 +123,8 @@ table = NetworkTable.getTable("5431");
 	 */
 	public void lowbarMode() {
 		// Drive 15 feet
-		drive.auto_driveStraight(156, 0.5, 0.05); // Distance (in), speed (0-1), curve(0-0.1)
-		drive.auto_driveTurn(-40, 0.5, 0.05);
+		//drive.auto_driveStraight(156, 0.5, 0.05); // Distance (in), speed (0-1), curve(0-0.1)
+		drive.auto_driveTurn(40, 0.5, 0.05);
 
 	}
 	

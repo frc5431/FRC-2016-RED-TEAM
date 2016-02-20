@@ -20,7 +20,7 @@ public class DriveBase {
 
 	private RobotDrive drive;
 	
-	private static int robotWidth = 23 + 1/8;
+	private static int robotWidth = 23 + (1/8);
 
 	/**
 	 * Default constructor
@@ -143,19 +143,28 @@ public class DriveBase {
 		double right = 0;
 		double leftDistance = 0;
 		double rightDistance = 0;
+		int leftNegate = 1;
+		int rightNegate = 1;
 						 //We aren't doing straight in this function are we? How am I going to find distance from just degrees (which is 0). 
 		if(degrees != 0){ //This is to make sure that even if build team programs, they won't kill themselves immediately.
 			if(degrees < 0){
-				leftDistance = (1/2 * degrees) * robotWidth / 360;   //degrees negates left for us (why type more?)
-				rightDistance = (1/2 * -degrees) * robotWidth / 360; //Negative because right will need to be positive
+				leftDistance = ((1.0/2.0) * degrees) * robotWidth / (360.0);   //degrees negates left for us (why type more?)
+				rightDistance = ((1.0/2.0) * -degrees) * robotWidth / (360.0); //Negative because right will need to be positive
+				SmartDashboard.putString("turnLeft", "YES");
+				leftNegate = -1;
 			}
 			else{
-				leftDistance = (1/2 * -degrees) * robotWidth / 360;	//Negating because left needs to go backward.
-				rightDistance = (1/2 * degrees) * robotWidth / 360;
+				leftDistance = ((1.0/2.0) * degrees) * robotWidth / (360.0);	//Negating because left needs to go backward.
+				rightDistance = ((1.0/2.0) * -degrees) * robotWidth / (360.0);
+				SmartDashboard.putString("turnLeft", "NO");
+				rightNegate = -1;
 			}
+			SmartDashboard.putNumber("Robot width", robotWidth);
+			SmartDashboard.putNumber("leftTurnDistance", leftDistance);
+			SmartDashboard.putNumber("rightTurnDistance", rightDistance);
 			//Lets just do copy and paste here, shall we? You don't mind - right, David?
-			while (((left = Robot.encoder.LeftDistance()) < leftDistance)
-					&& ((right = Robot.encoder.RightDistance()) < rightDistance)) {
+			while (((left = Robot.encoder.LeftDistance()) < leftDistance * leftNegate)
+					&& ((right = Robot.encoder.RightDistance()) < rightDistance * rightNegate)) {
 				if (left < (right - 0.01)) {
 					this.drive((speed + curve + .06), (speed - curve));
 				} else if (left > (right + 0.01)) {
