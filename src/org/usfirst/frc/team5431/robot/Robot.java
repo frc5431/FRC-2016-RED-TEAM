@@ -229,20 +229,20 @@ table = NetworkTable.getTable("5431");
 		}
 		table.putNumber("current turret speed", (encoder.rightFlyRPM()+encoder.leftFlyRPM())/2);
 		drive.checkInput(oi);
-		try {
-			
-			vision.updateVals();
-			checkAutoAim = vision.updateSmartDash();
-			if(checkAutoAim[1] != 5){// && checkAutoAim[0] != 0){ //Found the hole
-				this.autoShoot(checkAutoAim);
-				SmartDashboard.putNumber("THE AUTO TURRET SPEED", checkAutoAim[0]);
-				//turret.setSpeed(checkAutoAim[0]);
-				turret.setMotorSpeed(checkAutoAim[0]);
-				turret.shoot();
-			}
-		} catch(Throwable a) {
-			SmartDashboard.putString("ERROR:", "Failed to update vision values!");
-		}
+//		try {
+//			
+//			vision.updateVals();
+//			checkAutoAim = vision.updateSmartDash();
+//			if(checkAutoAim[1] != 5){// && checkAutoAim[0] != 0){ //Found the hole
+//				this.autoShoot(checkAutoAim);
+//				SmartDashboard.putNumber("THE AUTO TURRET SPEED", checkAutoAim[0]);
+//				//turret.setSpeed(checkAutoAim[0]);
+//				turret.setMotorSpeed(checkAutoAim[0]);
+//				turret.shoot();
+//			}
+//		} catch(Throwable a) {
+//			SmartDashboard.putString("ERROR:", "Failed to update vision values!");
+//		}
 	}
 
 	/**
