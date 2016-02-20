@@ -81,8 +81,8 @@ class Maths {
 	    		solidity[now] = Math.abs(solidity[now]);
 	    		fromCenter[now] = Math.abs(fromCenter[now]);
 	    		
-	    		holes[now] = ((areas[now]/2000) * areaNum) + ((1-(distances[now]/maxDistance)) * distNum)
-	    		+ ((solidity[now]/100) * solidNum) + ((fromCenter[now]/screenHalf) * fromNum);
+	    		holes[now] = (((areas[now]/2000) * areaNum) + ((1 - (distances[now]/maxDistance)) * distNum)
+	    		+ ((solidity[now]/100) * solidNum) - ((fromCenter[now]/screenHalf) * fromNum))/4;
 	    		
 	    		if(holes[now] > largest) {
 	    			largest = holes[now];
